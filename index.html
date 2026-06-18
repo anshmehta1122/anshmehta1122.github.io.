@@ -1,0 +1,1817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SDPSDJ ERP Portal — Academic Session 2026-27</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#f5f6fa;--surface:#fff;--surface2:#f0f2f8;--border:#e2e5f0;
+  --accent:#6B3FA0;--accent2:#4A90D9;--accent-light:#f0eaf8;
+  --text:#1a1a2e;--text2:#5a5f7a;--text3:#9499b5;
+  --success:#22a06b;--warn:#e6a817;--danger:#d93025;--info:#1a73e8;
+  --sidebar-w:240px;--header-h:60px;
+  --r:8px;--r2:12px;
+}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
+/* ===== LOGIN ===== */
+#login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%)}
+.login-card{background:#fff;border-radius:16px;padding:40px;width:420px;max-width:95vw;box-shadow:0 24px 64px rgba(0,0,0,.25)}
+.login-logo{text-align:center;margin-bottom:24px}
+.login-logo img{width:80px;height:80px;border-radius:50%}
+.login-school{text-align:center;margin-bottom:28px; font-size:32px;}
+.login-school h2{font-size:16px;font-weight:700;color:#1a1a2e;line-height:1.3}
+.login-school p{font-size:12px;color:#5a5f7a;margin-top:4px}
+.login-tabs{display:flex;gap:8px;margin-bottom:24px;background:#f5f6fa;border-radius:10px;padding:4px}
+.ltab{flex:1;padding:8px;text-align:center;border-radius:8px;cursor:pointer;font-size:13px;font-weight:500;color:#5a5f7a;transition:.2s}
+.ltab.active{background:#6B3FA0;color:#fff}
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:12px;font-weight:600;color:#5a5f7a;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+.form-group input,.form-group select{width:100%;padding:10px 14px;border:1.5px solid #e2e5f0;border-radius:8px;font-size:14px;outline:none;transition:.2s;background:#fff}
+.form-group input:focus,.form-group select:focus{border-color:#6B3FA0;box-shadow:0 0 0 3px rgba(107,63,160,.1)}
+.btn-login{width:100%;padding:12px;background:#6B3FA0;color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;transition:.2s}
+.btn-login:hover{background:#5a34a0}
+.login-hint{margin-top:16px;background:#f0eaf8;border-radius:8px;padding:12px;font-size:12px;color:#5a5f7a}
+.login-hint strong{color:#6B3FA0}
+
+/* ===== APP SHELL ===== */
+#app{display:none;min-height:100vh}
+.sidebar{position:fixed;left:0;top:0;width:var(--sidebar-w);height:100vh;background:#1a1a2e;overflow-y:auto;z-index:100;transition:.3s}
+.sidebar-header{padding:16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.sidebar-logo{display:flex;align-items:center;gap:10px}
+.sidebar-logo img{width:36px;height:36px;border-radius:50%}
+.sidebar-logo span{font-size:13px;font-weight:700;color:#fff;line-height:1.2}
+.sidebar-user{padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:8px}
+.sidebar-user .name{font-size:13px;font-weight:600;color:#fff}
+.sidebar-user .role-badge{display:inline-block;font-size:10px;padding:2px 8px;border-radius:20px;margin-top:4px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.role-student{background:#4A90D9;color:#fff}
+.role-teacher{background:#22a06b;color:#fff}
+.role-admin{background:#e6a817;color:#1a1a2e}
+.sidebar-nav{padding:8px}
+.nav-section{font-size:10px;font-weight:700;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:1px;padding:12px 12px 6px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;cursor:pointer;color:rgba(255,255,255,.65);font-size:13px;font-weight:500;transition:.15s;margin-bottom:2px}
+.nav-item:hover{background:rgba(255,255,255,.08);color:#fff}
+.nav-item.active{background:#6B3FA0;color:#fff}
+.nav-item .nav-icon{font-size:16px;width:20px;text-align:center}
+.nav-item .badge{margin-left:auto;background:#d93025;color:#fff;font-size:10px;padding:1px 6px;border-radius:10px}
+
+.topbar{position:fixed;left:var(--sidebar-w);right:0;top:0;height:var(--header-h);background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:16px;z-index:99}
+.topbar-title{font-size:16px;font-weight:700;color:var(--text);flex:1}
+.topbar-actions{display:flex;align-items:center;gap:12px}
+.icon-btn{width:36px;height:36px;border-radius:8px;border:1.5px solid var(--border);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--text2);transition:.15s;position:relative}
+.icon-btn:hover{background:var(--surface2)}
+.notif-dot{position:absolute;top:6px;right:6px;width:8px;height:8px;background:#d93025;border-radius:50%;border:2px solid #fff}
+.avatar{width:36px;height:36px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;cursor:pointer}
+
+.main-content{margin-left:var(--sidebar-w);margin-top:var(--header-h);padding:24px;min-height:calc(100vh - var(--header-h));overflow-x:hidden}
+
+/* ===== CARDS & COMPONENTS ===== */
+.page{display:none}
+.page.active{display:block}
+.page-header{margin-bottom:20px}
+.page-header h1{font-size:22px;font-weight:700;color:var(--text)}
+.page-header p{font-size:13px;color:var(--text2);margin-top:4px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:20px}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.card-header h3{font-size:15px;font-weight:700;color:var(--text)}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:24px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:16px;position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.stat-purple::before{background:#6B3FA0}
+.stat-blue::before{background:#4A90D9}
+.stat-green::before{background:#22a06b}
+.stat-orange::before{background:#e6a817}
+.stat-red::before{background:#d93025}
+.stat-card .stat-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:12px}
+.si-purple{background:#f0eaf8;color:#6B3FA0}
+.si-blue{background:#e8f2fc;color:#4A90D9}
+.si-green{background:#e8f8f2;color:#22a06b}
+.si-orange{background:#fef6e5;color:#e6a817}
+.si-red{background:#fce8e8;color:#d93025}
+.stat-card .stat-num{font-size:24px;font-weight:700;color:var(--text);line-height:1}
+.stat-card .stat-label{font-size:12px;color:var(--text2);margin-top:6px}
+.btn{padding:8px 16px;border-radius:var(--r);border:none;cursor:pointer;font-size:13px;font-weight:600;transition:.15s;display:inline-flex;align-items:center;gap:6px}
+.btn-primary{background:#6B3FA0;color:#fff}
+.btn-primary:hover{background:#5a34a0}
+.btn-secondary{background:var(--surface2);color:var(--text)}
+.btn-secondary:hover{background:#e2e5f0}
+.btn-success{background:#22a06b;color:#fff}
+.btn-danger{background:#d93025;color:#fff}
+.btn-sm{padding:5px 10px;font-size:12px}
+.btn-outline{background:transparent;border:1.5px solid var(--border);color:var(--text)}
+.btn-outline:hover{background:var(--surface2)}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;padding:10px 12px;font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;border-bottom:2px solid var(--border);white-space:nowrap}
+td{padding:10px 12px;font-size:13px;border-bottom:1px solid var(--border);vertical-align:middle}
+tr:hover td{background:var(--surface2)}
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600}
+.badge-green{background:#e8f8f2;color:#22a06b}
+.badge-red{background:#fce8e8;color:#d93025}
+.badge-blue{background:#e8f2fc;color:#4A90D9}
+.badge-orange{background:#fef6e5;color:#e6a817}
+.badge-purple{background:#f0eaf8;color:#6B3FA0}
+.badge-gray{background:#f0f2f8;color:#5a5f7a}
+.form-row{display:flex;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.form-group2{flex:1;min-width:180px}
+.form-group2 label{display:block;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px}
+.form-group2 input,.form-group2 select,.form-group2 textarea{width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:var(--r);font-size:13px;outline:none;transition:.2s;font-family:inherit;background:#fff}
+.form-group2 input:focus,.form-group2 select:focus,.form-group2 textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-light)}
+.form-group2 textarea{resize:vertical;min-height:80px}
+.tabs{display:flex;gap:4px;margin-bottom:20px;background:var(--surface2);border-radius:var(--r);padding:4px}
+.tab{padding:7px 16px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:500;color:var(--text2);transition:.15s}
+.tab.active{background:#fff;color:var(--accent);box-shadow:0 1px 4px rgba(0,0,0,.1)}
+.notice-card{border:1px solid var(--border);border-radius:var(--r2);padding:16px;margin-bottom:12px;transition:.15s}
+.notice-card:hover{box-shadow:0 2px 12px rgba(0,0,0,.08)}
+.notice-card .nc-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;gap:12px}
+.notice-card .nc-title{font-size:14px;font-weight:700;color:var(--text)}
+.notice-card .nc-meta{font-size:12px;color:var(--text2);margin-bottom:8px}
+.notice-card .nc-body{font-size:13px;color:var(--text);line-height:1.6}
+.urgent-banner{background:linear-gradient(135deg,#d93025,#e84436);color:#fff;border-radius:var(--r2);padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;gap:12px}
+.urgent-banner .ub-icon{font-size:22px}
+.urgent-banner .ub-text strong{display:block;font-weight:700}
+.urgent-banner .ub-text span{font-size:12px;opacity:.9}
+.att-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.att-day{aspect-ratio:1;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600}
+.att-p{background:#e8f8f2;color:#22a06b}
+.att-a{background:#fce8e8;color:#d93025}
+.att-h{background:#f0f2f8;color:#9499b5}
+.att-l{background:#fef6e5;color:#e6a817}
+.progress-bar{height:8px;background:#f0f2f8;border-radius:4px;overflow:hidden;margin-top:6px}
+.progress-fill{height:100%;border-radius:4px;transition:.3s}
+.pf-green{background:#22a06b}
+.pf-orange{background:#e6a817}
+.pf-red{background:#d93025}
+.pf-blue{background:#4A90D9}
+.fee-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border)}
+.fee-row:last-child{border-bottom:none}
+.subject-chip{display:inline-block;padding:4px 10px;background:var(--accent-light);color:var(--accent);border-radius:20px;font-size:12px;font-weight:600;margin:2px}
+.timetable{display:grid;gap:2px}
+.tt-row{display:grid;grid-template-columns:80px repeat(6,1fr);gap:2px}
+.tt-cell{padding:8px 6px;border-radius:6px;font-size:11px;text-align:center;min-height:50px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.tt-head{background:var(--surface2);font-weight:700;font-size:11px;color:var(--text2)}
+.tt-time{background:var(--surface2);font-weight:600;color:var(--text2)}
+.tt-sub{color:#fff;font-weight:600}
+.sub-eng{background:#4A90D9}.sub-hin{background:#e6a817}.sub-mat{background:#6B3FA0}.sub-sci{background:#22a06b}.sub-sst{background:#e84436}.sub-comp{background:#17a2b8}.sub-san{background:#fd7e14}.sub-phy{background:#6610f2}.sub-che{background:#20c997}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal{background:#fff;border-radius:var(--r2);padding:24px;width:560px;max-width:100%;max-height:85vh;overflow-y:auto;position:relative}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.modal-header h3{font-size:16px;font-weight:700}
+.modal-close{width:32px;height:32px;border-radius:50%;border:none;background:var(--surface2);cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;color:var(--text2)}
+.modal-close:hover{background:var(--border)}
+.alert{padding:12px 16px;border-radius:var(--r);margin-bottom:16px;font-size:13px;display:flex;align-items:center;gap:10px}
+.alert-success{background:#e8f8f2;color:#22a06b;border-left:3px solid #22a06b}
+.alert-danger{background:#fce8e8;color:#d93025;border-left:3px solid #d93025}
+.alert-info{background:#e8f2fc;color:#1a73e8;border-left:3px solid #1a73e8}
+.alert-warn{background:#fef6e5;color:#e6a817;border-left:3px solid #e6a817}
+.empty-state{text-align:center;padding:48px 24px;color:var(--text2)}
+.empty-state .es-icon{font-size:48px;margin-bottom:16px;opacity:.4}
+.empty-state p{font-size:14px}
+.search-bar{display:flex;align-items:center;gap:8px;background:var(--surface2);border-radius:var(--r);padding:8px 12px;margin-bottom:16px}
+.search-bar input{flex:1;border:none;background:transparent;font-size:13px;outline:none;color:var(--text)}
+.search-bar input::placeholder{color:var(--text3)}
+.profile-header{display:flex;align-items:center;gap:20px;padding:20px;background:linear-gradient(135deg,var(--accent) 0%,#4A90D9 100%);border-radius:var(--r2);color:#fff;margin-bottom:20px}
+.profile-avatar{width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;border:3px solid rgba(255,255,255,.4);flex-shrink:0}
+.profile-info h2{font-size:20px;font-weight:700}
+.profile-info p{font-size:13px;opacity:.85;margin-top:4px}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.detail-row{padding:12px 0;border-bottom:1px solid var(--border);display:flex;gap:16px}
+.detail-label{font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;min-width:140px;flex-shrink:0}
+.detail-value{font-size:13px;color:var(--text)}
+.upload-zone{border:2px dashed var(--border);border-radius:var(--r2);padding:32px;text-align:center;cursor:pointer;transition:.2s}
+.upload-zone:hover{border-color:var(--accent);background:var(--accent-light)}
+.upload-zone .uz-icon{font-size:36px;color:var(--text3);margin-bottom:12px}
+.upload-zone p{font-size:13px;color:var(--text2)}
+.upload-zone span{font-size:12px;color:var(--text3)}
+.hw-card{border:1px solid var(--border);border-radius:var(--r2);padding:16px;margin-bottom:12px}
+.hw-card .hw-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.hw-card .hw-sub{font-size:12px;font-weight:600;color:var(--accent)}
+.hw-card .hw-title{font-size:14px;font-weight:700;margin-bottom:6px}
+.hw-card .hw-due{font-size:12px;color:var(--text2)}
+.chat-msg{padding:12px;border-radius:var(--r);margin-bottom:10px;max-width:75%}
+.chat-msg.student-msg{background:var(--accent-light);margin-left:auto}
+.chat-msg.teacher-reply{background:var(--surface2)}
+.sitting-table{display:grid;gap:12px}
+.seat-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.seat{width:90px;padding:8px;border:1px solid var(--border);border-radius:var(--r);text-align:center;font-size:11px}
+.seat.assigned{background:var(--accent-light);border-color:var(--accent)}
+.seat .seat-num{font-size:14px;font-weight:700;color:var(--accent);margin-bottom:2px}
+.admit-card{border:2px solid var(--accent);border-radius:var(--r2);padding:20px}
+.admit-header{text-align:center;border-bottom:2px solid var(--accent);padding-bottom:16px;margin-bottom:16px}
+.admit-header h2{color:var(--accent);font-size:18px}
+.admit-header p{font-size:12px;color:var(--text2)}
+.salary-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)}
+.salary-row:last-child{border-bottom:none;font-weight:700;font-size:15px}
+.filter-row{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
+.filter-row select,.filter-row input{padding:7px 10px;border:1.5px solid var(--border);border-radius:var(--r);font-size:13px;outline:none;background:#fff;color:var(--text)}
+.filter-row select:focus,.filter-row input:focus{border-color:var(--accent)}
+.letter-preview{background:#fff;padding:40px;border:1px solid var(--border);border-radius:var(--r2);max-width:680px;margin:0 auto;line-height:1.7}
+.letter-preview .lp-header{text-align:center;margin-bottom:24px;padding-bottom:16px;border-bottom:3px solid var(--accent)}
+.letter-preview .lp-date{text-align:right;margin-bottom:20px;font-size:13px;color:var(--text2)}
+.letter-preview .lp-body{font-size:13px}
+.scroll-table{overflow-x:auto}
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .main-content{margin-left:0}
+  .topbar{left:0}
+  .grid-4{grid-template-columns:repeat(2,1fr)}
+  .grid-3{grid-template-columns:1fr}
+  .grid-2{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== LOGIN PAGE ===== -->
+<div id="login-page">
+  <div class="login-card">
+    <div class="login-logo">
+      <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#6B3FA0,#4A90D9);display:flex;align-items:center;justify-content:center;margin:0 auto">
+        <span style="color:#fff;font-size:28px;font-weight:900">SD</span>
+      </div>
+    </div>
+    <div class="login-school">
+      <h2><b>S.D. Public School Duplicate, Jagadhri</b></h2>
+      <p>Affiliated to CBSE, New Delhi · Academic Session 2026-27</p>
+
+    </div>
+            <div style="color:rgb(112, 33, 177);font-size:17px;font-weight:900; text-align:center; padding-bottom: 10px;">
+                  <h2><b>ERP PORTAL</b></h2>
+                </div>
+
+    <div class="login-tabs">
+      <div class="ltab active" onclick="switchLoginTab('student')">🎓 Student</div>
+      <div class="ltab" onclick="switchLoginTab('teacher')">👩‍🏫 Teacher</div>
+      <div class="ltab" onclick="switchLoginTab('admin')">🔐 Admin</div>
+    </div>
+    <div id="login-form">
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" id="login-username" placeholder="e.g. kamal.lal44" autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label>School ID</label>
+        <input type="text" id="login-schoolid" placeholder="e.g. SD010001" autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="login-password" placeholder="Enter password" value="school@2026">
+      </div>
+      <button class="btn-login" onclick="doLogin()">Sign In →</button>
+      <div id="login-error" style="color:#d93025;font-size:12px;margin-top:10px;display:none"></div>
+    </div>
+    <div class="login-hint" id="login-hint">
+      
+      <em style="font-size:11px">Password: school@2026 for all users</em>
+    </div>
+  </div>
+</div>
+
+<!-- ===== APP SHELL ===== -->
+<div id="app">
+  <!-- Sidebar -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#6B3FA0,#4A90D9);display:flex;align-items:center;justify-content:center;flex-shrink:0"><span style="color:#fff;font-size:14px;font-weight:900">SD</span></div>
+        <span>SDPSDJ<br><span style="font-weight:400;font-size:10px;opacity:.6">ERP Portal</span></span>
+      </div>
+    </div>
+    <div class="sidebar-user">
+      <div class="name" id="sb-name">Loading...</div>
+      <div id="sb-role-badge"></div>
+      <div style="font-size:11px;color:rgba(255,255,255,.45);margin-top:4px" id="sb-id"></div>
+    </div>
+    <div class="sidebar-nav" id="sidebar-nav"></div>
+    <div style="padding:16px;margin-top:auto;border-top:1px solid rgba(255,255,255,.08)">
+      <div class="nav-item" onclick="logout()" style="color:#d93025">
+        <span class="nav-icon">🚪</span> Logout
+      </div>
+    </div>
+  </nav>
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <button onclick="toggleSidebar()" style="border:none;background:none;cursor:pointer;font-size:20px;display:none;padding:4px" id="menu-toggle">☰</button>
+    <div class="topbar-title" id="topbar-title">Dashboard</div>
+    <div class="topbar-actions">
+      <div class="icon-btn" onclick="showPage('notices')" title="Notices"><span>🔔</span><span class="notif-dot" id="notif-dot" style="display:none"></span></div>
+      <div class="icon-btn" onclick="showPage('profile')" title="Profile">👤</div>
+      <div class="avatar" id="top-avatar" onclick="showPage('profile')">?</div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content" id="main-content">
+    <!-- Pages injected by JS -->
+  </main>
+</div>
+
+<!-- Modal Container -->
+<div id="modal-overlay" class="modal-overlay" style="display:none" onclick="closeModal(event)">
+  <div class="modal" id="modal-body" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h3 id="modal-title">Modal</h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// DATA STORE
+// ============================================================
+const DB = {
+  // Shared data across roles
+  notices: [
+    {id:1,title:'Annual Day 2026 – Save the Date',body:'Annual Day will be held on 15th July 2026 at the school auditorium. All students must participate. Parents are cordially invited.',type:'general',author:'Admin',date:'2026-06-15',for:['student','teacher','admin']},
+    {id:2,title:'Summer Vacation Schedule',body:'Summer vacations will commence from 20th June 2026 and school will reopen on 1st July 2026. Students must complete the holiday homework before the reopening date.',type:'general',author:'Admin',date:'2026-06-10',for:['student','teacher','admin']},
+    {id:3,title:'Staff Meeting – 20th June',body:'All teaching staff are requested to attend the staff meeting on 20th June 2026 at 10:00 AM in the conference hall. Attendance is mandatory.',type:'staff',author:'Principal',date:'2026-06-12',for:['teacher','admin']},
+    {id:4,title:'Fee Payment Reminder',body:'Students who have not paid the quarterly fee are requested to do so by 25th June 2026 to avoid late fee charges.',type:'urgent',author:'Admin',date:'2026-06-14',for:['student','admin']},
+    {id:5,title:'Sports Day Trials',body:'Selections for Sports Day 2026 will be held on 22nd June. Interested students should report to the sports ground at 7 AM with proper sports attire.',type:'general',author:'PTI',date:'2026-06-13',for:['student','teacher','admin']},
+  ],
+  circulars: [
+    {id:1,title:'Circular No. 12 – Code of Conduct Update',body:'This circular brings to the notice of all concerned that the school code of conduct has been updated. Key changes include: (1) Mandatory ID cards at all times. (2) Mobile phones strictly prohibited inside campus. (3) Uniform must be worn on all school days.',author:'Principal Office',date:'2026-06-01',for:['student','teacher','admin']},
+    {id:2,title:'Circular No. 13 – Examination Guidelines',body:'All students appearing for the upcoming examinations are advised to go through the examination guidelines carefully. Seating plans are available on the portal.',author:'Dean Academics',date:'2026-06-08',for:['student','teacher','admin']},
+    {id:3,title:'Circular No. 14 – Staff Development Programme',body:'A two-day Staff Development Programme is scheduled for 18-19 June 2026. All teaching staff must attend. Accommodation arrangements have been made.',author:'Admin Office',date:'2026-06-10',for:['teacher','admin']},
+  ],
+  urgentAnnouncements: [
+    {id:1,text:'Kindly login into school ERP portal using your credentials provided by your class incharges. If not contact them asap.',date:'2026-06-18', author: 'Admin'},
+  ],
+  // Homework/assignments per class-section
+  homeworks: [
+    {id:1,class:'IX',section:'A',subject:'Mathematics',title:'Chapter 4 – Quadratic Equations',desc:'Solve exercise 4.3, Q1 to Q10. Show all working steps.',dueDate:'2026-06-22',uploadedBy:'Ms. Anjali Nanda',attachments:['Math_HW_Q4.3.pdf']},
+    {id:2,class:'IX',section:'A',subject:'Science',title:'Chemical Reactions – Worksheet',desc:'Complete the reaction type identification worksheet. Refer to chapter 1.',dueDate:'2026-06-23',uploadedBy:'Ms. Sashi Sikka',attachments:[]},
+    {id:3,class:'IX',section:'A',subject:'English',title:'Essay Writing – Environment',desc:'Write a 300-word essay on "Impact of Plastic Pollution". Use formal language.',dueDate:'2026-06-24',uploadedBy:'Ms. Sarabjit Kaur',attachments:['essay_guidelines.pdf']},
+    {id:4,class:'VI',section:'B',subject:'Mathematics',title:'Fractions – Revision',desc:'Revise all types of fractions from chapter 7. Complete exercise 7.2.',dueDate:'2026-06-21',uploadedBy:'Ms. Kanjali Negi',attachments:[]},
+  ],
+  assignments: [
+    {id:1,class:'IX',section:'A',subject:'Mathematics',title:'Mid-term Assignment – Algebra',desc:'Solve 20 algebra problems as listed. This will carry 10 marks.',dueDate:'2026-06-28',maxMarks:10,uploadedBy:'Ms. Anjali Nanda',status:'active'},
+    {id:2,class:'IX',section:'A',subject:'Science',title:'Lab Report – Osmosis Experiment',desc:'Submit a detailed lab report with observations, diagrams, and conclusion.',dueDate:'2026-06-30',maxMarks:15,uploadedBy:'Ms. Sashi Sikka',status:'active'},
+    {id:3,class:'XI',section:'A',subject:'Physics',title:'Derivations Set 1',desc:'Derive all formulas from Chapter 2 of the NCERT textbook.',dueDate:'2026-06-25',maxMarks:20,uploadedBy:'Ms. Sushma Mittal',status:'active'},
+  ],
+  courseMaterial: [
+    {id:1,class:'IX',section:'A',subject:'Mathematics',title:'NCERT Chapter 4 Notes',type:'pdf',size:'2.3 MB',uploadedBy:'Ms. Anjali Nanda',date:'2026-06-10'},
+    {id:2,class:'IX',section:'A',subject:'Science',title:'Chemical Reactions PPT',type:'ppt',size:'4.1 MB',uploadedBy:'Ms. Sashi Sikka',date:'2026-06-11'},
+    {id:3,class:'IX',section:'A',subject:'English',title:'Grammar Workbook Q1',type:'pdf',size:'1.8 MB',uploadedBy:'Ms. Sarabjit Kaur',date:'2026-06-09'},
+    {id:4,class:'VI',section:'B',subject:'Mathematics',title:'Fractions Practice Sheet',type:'pdf',size:'0.9 MB',uploadedBy:'Ms. Kanjali Negi',date:'2026-06-12'},
+  ],
+  doubts: [
+    {id:1,class:'IX',section:'A',subject:'Mathematics',question:'I don\'t understand how to complete the square. Can you explain with an example?',askedBy:'Yash Bajaj',askedById:'SD012285',date:'2026-06-16',reply:'Sure Yash! Complete the square means...(click to see full reply)',repliedBy:'Ms. Anjali Nanda',replyDate:'2026-06-17',status:'resolved'},
+    {id:2,class:'IX',section:'A',subject:'Science',question:'What is the difference between endothermic and exothermic reactions? Give real life examples.',askedBy:'Neha Sehgal',askedById:'SD012286',date:'2026-06-17',reply:'',repliedBy:'',replyDate:'',status:'pending'},
+  ],
+  grievances: [
+    {id:1,submittedBy:'Yash Bajaj',submittedById:'SD012285',role:'student',type:'Academic',title:'Wrong marks in Science test',desc:'I scored 18 but only 15 was updated in the system. Please check.',date:'2026-06-14',status:'under review',response:''},
+  ],
+  transportRequests: [
+    {id:1,name:'Yash Bajaj',id_:'SD012285',role:'student',class:'IX-A',route:'Route 3 – Model Town',stop:'Model Town Gate',date:'2026-06-12',status:'pending',type:'new'},
+  ],
+  resignations: [
+    {id:1,name:'Ms. Anjali Nanda',teacherId:'SDPSD1250',date:'2026-06-10',reason:'Personal reasons – relocating to another city.',status:'pending',noticePeriod:'30 days'},
+  ],
+  examSitting: [
+    {exam:'Annual Exam 2026',class:'IX',section:'A',date:'2026-07-01',subject:'Mathematics',hall:'Hall A',rows:[
+      [{seat:1,id:'SD012285',name:'Yash Bajaj'},{seat:2,id:'SD012286',name:'Neha Sehgal'},{seat:3,id:'SD012287',name:'Kabir Khanna'},{seat:4,id:'SD012288',name:'Ananya Mehra'}],
+      [{seat:5,id:'SD012289',name:'Rohan Singh'},{seat:6,id:'SD012290',name:'Priya Sharma'},{seat:7,id:'SD012291',name:'Dev Kumar'},{seat:8,id:'SD012292',name:'Simran Kaur'}],
+    ]},
+  ],
+  attendanceData: {
+    // Per student attendance for current month
+    'SD012285': {present:18,absent:2,leave:0,total:20,days:{'1':'P','2':'P','3':'H','4':'P','5':'P','6':'A','7':'P','8':'P','9':'P','10':'P','11':'H','12':'P','13':'P','14':'P','15':'P','16':'A','17':'P','18':'P'}},
+  },
+  teacherAttendance: {
+    'SDPSD1250': {present:18,absent:1,leave:1,total:20}
+  },
+  feeData: {
+    'SD012285': {
+      name:'Yash Bajaj', class:'IX-A',
+      dues:[
+        {term:'Q1 2026-27',amount:8500,status:'paid',date:'2026-04-05',receipt:'REC-001234'},
+        {term:'Q2 2026-27',amount:8500,status:'paid',date:'2026-05-10',receipt:'REC-001567'},
+        {term:'Q3 2026-27',amount:8500,status:'pending',date:'',receipt:''},
+        {term:'Q4 2026-27',amount:8500,status:'pending',date:'',receipt:''},
+        {term:'Transport Fee',amount:4000,status:'paid',date:'2026-04-05',receipt:'REC-001235'},
+        {term:'Annual Fee',amount:2000,status:'paid',date:'2026-04-05',receipt:'REC-001233'},
+      ]
+    }
+  },
+  salaryData: {
+    'SDPSD1250': {
+      name:'Ms. Anjali Nanda', designation:'TGT',
+      basic:45000, hra:9000, da:5400, transport:1600, medical:500,
+      pf:5400, tax:2500, misc:0,
+      history:[
+        {month:'May 2026',gross:62000,deductions:7900,net:54100,status:'paid',date:'2026-05-31'},
+        {month:'April 2026',gross:62000,deductions:7900,net:54100,status:'paid',date:'2026-04-30'},
+        {month:'March 2026',gross:62000,deductions:7900,net:54100,status:'paid',date:'2026-03-31'},
+      ]
+    }
+  },
+  applications: [
+    {id:1,from:'Yash Bajaj',fromId:'SD012285',role:'student',type:'Leave Application',subject:'Medical Leave',body:'Respectfully, I wish to inform that I will be unable to attend school from 20-22 June due to a medical procedure. Doctor\'s certificate is attached.',date:'2026-06-15',status:'approved',response:'Leave granted. Get well soon.'},
+  ],
+};
+
+// ============================================================
+// STUDENT DATA (embedded from PDF)
+// ============================================================
+const STUDENTS = [{"id":"SD010001","u":"kamal.lal44","n":"Kamal Lal","c":"Pre-Nursery","s":"Chubbies"},{"id":"SD010002","u":"deepak.kashyap92","n":"Deepak Kashyap","c":"Pre-Nursery","s":"Chubbies"},{"id":"SD010003","u":"subhash.khanna38","n":"Subhash Khanna","c":"Pre-Nursery","s":"Chubbies"},{"id":"SD010004","u":"vikas.palta74","n":"Vikas Palta","c":"Pre-Nursery","s":"Chubbies"},{"id":"SD010005","u":"ajay.kapoor96","n":"Ajay Kapoor","c":"Pre-Nursery","s":"Chubbies"},{"id":"SD010006","u":"manish.mishra79","n":"Manish Mishra","c":"Pre-Nursery","s":"Chubbies"},{"id":"SD010007","u":"ritu.anand32","n":"Ritu Anand","c":"Pre-Nursery","s":"Chubbies"},{"id":"SD010008","u":"rehan.chawla54","n":"Rehan Chawla","c":"Pre-Nursery","s":"Chubbies"},{"id":"SD010011","u":"sakshi.sikka9","n":"Sakshi Sikka","c":"Pre-Nursery","s":"Chubbies"},{"id":"SD010012","u":"aarohi.goel26","n":"Aarohi Goel","c":"Pre-Nursery","s":"Chubbies"},{"id":"SD010035","u":"priya.bhatia12","n":"Priya Bhatia","c":"Pre-Nursery","s":"Bunnies"},{"id":"SD010036","u":"aryan.mehra55","n":"Aryan Mehra","c":"Pre-Nursery","s":"Bunnies"},{"id":"SD010071","u":"ananya.gupta18","n":"Ananya Gupta","c":"Pre-Nursery","s":"Froggies"},{"id":"SD010107","u":"kabir.sharma33","n":"Kabir Sharma","c":"Pre-Nursery","s":"Cuties"},{"id":"SD010140","u":"tanvi.verma21","n":"Tanvi Verma","c":"Pre-Nursery","s":"Smarties"},{"id":"SD010173","u":"rohan.patel44","n":"Rohan Patel","c":"Pre-Nursery","s":"Sweeties"},{"id":"SD010208","u":"neha.singh76","n":"Neha Singh","c":"Nursery","s":"Chubbies"},{"id":"SD010243","u":"aditya.kumar29","n":"Aditya Kumar","c":"Nursery","s":"Bunnies"},{"id":"SD010312","u":"pooja.arora52","n":"Pooja Arora","c":"Nursery","s":"Cuties"},{"id":"SD010346","u":"varun.joshi11","n":"Varun Joshi","c":"Nursery","s":"Smarties"},{"id":"SD010400","u":"simran.kaur78","n":"Simran Kaur","c":"K.G.","s":"Chubbies"},{"id":"SD010435","u":"harsh.sharma90","n":"Harsh Sharma","c":"K.G.","s":"Bunnies"},{"id":"SD010635","u":"ravi.sikka1","n":"Ravi Sikka","c":"I","s":"A"},{"id":"SD010636","u":"shivam.prajapati37","n":"Shivam Prajapati","c":"I","s":"A"},{"id":"SD010637","u":"harsh.chawla90","n":"Harsh Chawla","c":"I","s":"A"},{"id":"SD010638","u":"ananya.sharma11","n":"Ananya Sharma","c":"I","s":"A"},{"id":"SD010700","u":"priya.gupta44","n":"Priya Gupta","c":"I","s":"B"},{"id":"SD010701","u":"mohit.jain22","n":"Mohit Jain","c":"I","s":"B"},{"id":"SD010750","u":"neha.kapoor33","n":"Neha Kapoor","c":"I","s":"D"},{"id":"SD010800","u":"kabir.mehta11","n":"Kabir Mehta","c":"I","s":"E"},{"id":"SD010850","u":"divya.lal99","n":"Divya Lal","c":"I","s":"F"},{"id":"SD010900","u":"rohan.sharma44","n":"Rohan Sharma","c":"II","s":"A"},{"id":"SD010901","u":"tanvi.gupta22","n":"Tanvi Gupta","c":"II","s":"A"},{"id":"SD010950","u":"aditya.verma55","n":"Aditya Verma","c":"II","s":"B"},{"id":"SD011000","u":"priya.arora88","n":"Priya Arora","c":"II","s":"D"},{"id":"SD011050","u":"varun.kumar33","n":"Varun Kumar","c":"II","s":"E"},{"id":"SD011100","u":"simran.singh21","n":"Simran Singh","c":"III","s":"B"},{"id":"SD011101","u":"harsh.patel99","n":"Harsh Patel","c":"III","s":"B"},{"id":"SD011150","u":"ananya.joshi44","n":"Ananya Joshi","c":"III","s":"C"},{"id":"SD011200","u":"ravi.kapoor11","n":"Ravi Kapoor","c":"III","s":"D"},{"id":"SD011250","u":"mohit.sood33","n":"Mohit Sood","c":"III","s":"E"},{"id":"SD011300","u":"neha.bhatia77","n":"Neha Bhatia","c":"III","s":"F"},{"id":"SD011350","u":"kabir.lal44","n":"Kabir Lal","c":"IV","s":"A"},{"id":"SD011351","u":"divya.mehta22","n":"Divya Mehta","c":"IV","s":"A"},{"id":"SD011400","u":"rohan.gupta11","n":"Rohan Gupta","c":"IV","s":"C"},{"id":"SD011450","u":"tanvi.sharma99","n":"Tanvi Sharma","c":"IV","s":"D"},{"id":"SD011500","u":"aditya.arora55","n":"Aditya Arora","c":"IV","s":"F"},{"id":"SD011550","u":"priya.verma44","n":"Priya Verma","c":"V","s":"A"},{"id":"SD011551","u":"varun.kapoor22","n":"Varun Kapoor","c":"V","s":"A"},{"id":"SD011600","u":"simran.jain11","n":"Simran Jain","c":"V","s":"B"},{"id":"SD011650","u":"harsh.prajapati88","n":"Harsh Prajapati","c":"V","s":"D"},{"id":"SD011700","u":"divya.lal43","n":"Divya Lal","c":"VI","s":"A"},{"id":"SD011701","u":"mohit.singh66","n":"Mohit Singh","c":"VI","s":"A"},{"id":"SD011709","u":"rohan.sood61","n":"Rohan Sood","c":"VI","s":"B"},{"id":"SD011710","u":"tanvi.goel84","n":"Tanvi Goel","c":"VI","s":"B"},{"id":"SD011711","u":"aditya.kapoor25","n":"Aditya Kapoor","c":"VI","s":"B"},{"id":"SD011720","u":"priya.sharma37","n":"Priya Sharma","c":"VI","s":"C"},{"id":"SD011730","u":"varun.arora52","n":"Varun Arora","c":"VI","s":"D"},{"id":"SD011750","u":"simran.mehta18","n":"Simran Mehta","c":"VI","s":"F"},{"id":"SD011800","u":"harsh.gupta91","n":"Harsh Gupta","c":"VII","s":"B"},{"id":"SD011850","u":"ananya.verma48","n":"Ananya Verma","c":"VII","s":"C"},{"id":"SD011900","u":"ravi.kapoor73","n":"Ravi Kapoor","c":"VII","s":"D"},{"id":"SD011950","u":"neha.patel28","n":"Neha Patel","c":"VII","s":"F"},{"id":"SD012000","u":"kabir.jain55","n":"Kabir Jain","c":"VIII","s":"B"},{"id":"SD012050","u":"divya.sharma19","n":"Divya Sharma","c":"VIII","s":"C"},{"id":"SD012100","u":"rohan.sood44","n":"Rohan Sood","c":"VIII","s":"D"},{"id":"SD012150","u":"tanvi.bhatia62","n":"Tanvi Bhatia","c":"VIII","s":"E"},{"id":"SD012200","u":"aditya.lal31","n":"Aditya Lal","c":"VIII","s":"F"},{"id":"SD012285","u":"yash.bajaj4","n":"Yash Bajaj","c":"IX","s":"A"},{"id":"SD012286","u":"neha.sehgal96","n":"Neha Sehgal","c":"IX","s":"A"},{"id":"SD012287","u":"kabir.khanna31","n":"Kabir Khanna","c":"IX","s":"A"},{"id":"SD012288","u":"ananya.mehra44","n":"Ananya Mehra","c":"IX","s":"A"},{"id":"SD012289","u":"rohan.singh77","n":"Rohan Singh","c":"IX","s":"A"},{"id":"SD012300","u":"priya.kapoor12","n":"Priya Kapoor","c":"IX","s":"B"},{"id":"SD012350","u":"varun.gupta88","n":"Varun Gupta","c":"IX","s":"C"},{"id":"SD012400","u":"simran.arora23","n":"Simran Arora","c":"IX","s":"E"},{"id":"SD012450","u":"harsh.verma56","n":"Harsh Verma","c":"IX","s":"F"},{"id":"SD012500","u":"ananya.jain11","n":"Ananya Jain","c":"X","s":"A"},{"id":"SD012550","u":"ravi.sharma44","n":"Ravi Sharma","c":"X","s":"C"},{"id":"SD012600","u":"mohit.patel99","n":"Mohit Patel","c":"X","s":"D"},{"id":"SD012650","u":"neha.gupta33","n":"Neha Gupta","c":"X","s":"E"},{"id":"SD012697","u":"tanvi.chauhan39","n":"Tanvi Chauhan","c":"XI","s":"A"},{"id":"SD012698","u":"yash.dhingra90","n":"Yash Dhingra","c":"XI","s":"A"},{"id":"SD012699","u":"kabir.chauhan19","n":"Kabir Chauhan","c":"XI","s":"A"},{"id":"SD012750","u":"divya.kapoor52","n":"Divya Kapoor","c":"XI","s":"B"},{"id":"SD012800","u":"rohan.arora71","n":"Rohan Arora","c":"XI","s":"C"},{"id":"SD012850","u":"tanvi.verma38","n":"Tanvi Verma","c":"XI","s":"D"},{"id":"SD012900","u":"aditya.sharma84","n":"Aditya Sharma","c":"XI","s":"E"},{"id":"SD012950","u":"priya.jain15","n":"Priya Jain","c":"XI","s":"F"},{"id":"SD013000","u":"varun.lal27","n":"Varun Lal","c":"XI","s":"G"},{"id":"SD013050","u":"simran.mehta88","n":"Simran Mehta","c":"XI","s":"H"},{"id":"SD013100","u":"harsh.sehgal62","n":"Harsh Sehgal","c":"XI","s":"J"},{"id":"SD013150","u":"ananya.khanna35","n":"Ananya Khanna","c":"XI","s":"K"},{"id":"SD013200","u":"ravi.gupta48","n":"Ravi Gupta","c":"XI","s":"L"},{"id":"SD013250","u":"mohit.chauhan11","n":"Mohit Chauhan","c":"XII","s":"A"},{"id":"SD013300","u":"neha.arora77","n":"Neha Arora","c":"XII","s":"B"},{"id":"SD013350","u":"kabir.verma33","n":"Kabir Verma","c":"XII","s":"C"},{"id":"SD013400","u":"divya.jain56","n":"Divya Jain","c":"XII","s":"D"},{"id":"SD013450","u":"rohan.kapoor19","n":"Rohan Kapoor","c":"XII","s":"E"},{"id":"SD013500","u":"tanvi.sharma91","n":"Tanvi Sharma","c":"XII","s":"F"},{"id":"SD013550","u":"aditya.sood44","n":"Aditya Sood","c":"XII","s":"G"},{"id":"SD013600","u":"priya.lal22","n":"Priya Lal","c":"XII","s":"H"},{"id":"SD013650","u":"varun.mehta68","n":"Varun Mehta","c":"XII","s":"J"},{"id":"SD013700","u":"simran.gupta35","n":"Simran Gupta","c":"XII","s":"K"},{"id":"SD013750","u":"harsh.sharma12","n":"Harsh Sharma","c":"XII","s":"L"}];
+
+// Teacher data from directory
+const TEACHERS = [
+  {id:'SDPSD1250',u:'anjali.sdpsd1250',n:'Ms. Anjali Nanda',desig:'TGT',subjects:['English','Hindi'],classes:[{c:'VI',s:'A'}]},
+  {id:'SDPSD1251',u:'geetanjali.sdpsd1251',n:'Ms. Geetanjali',desig:'TGT',subjects:['Hindi','Artificial Intelligence'],classes:[{c:'VI',s:'B'}]},
+  {id:'SDPSD1252',u:'jasmeetkau.sdpsd1252',n:'Ms. Jasmeet Kaur',desig:'TGT',subjects:['English','Hindi'],classes:[{c:'VI',s:'C'}]},
+  {id:'SDPSD1268',u:'sashisikka.sdpsd1268',n:'Ms. Sashi Sikka',desig:'TGT',subjects:['Hindi','Science'],classes:[{c:'IX',s:'A'}]},
+  {id:'SDPSD1269',u:'poojakambo.sdpsd1269',n:'Ms. Pooja Kamboj',desig:'TGT',subjects:['English','Punjabi'],classes:[{c:'IX',s:'B'}]},
+  {id:'SDPSD1272',u:'sarabjitka.sdpsd1272',n:'Ms. Sarabjit Kaur',desig:'TGT',subjects:['English','Hindi'],classes:[{c:'IX',s:'E'}]},
+  {id:'SDPSD1439',u:'sushmamitt.sdpsd1439',n:'Ms. Sushma Mittal',desig:'PGT',subjects:['Physics'],classes:[{c:'XI',s:'A'},{c:'XII',s:'A'}]},
+  {id:'SDPSD1050',u:'pratibha.sdpsd1050',n:'Ms. Pratibha',desig:'PRT',subjects:['Mathematics'],classes:[{c:'I',s:'A'}]},
+  {id:'SDPSD1304',u:'kanjalineg.sdpsd1304',n:'Ms. Kanjali Negi',desig:'TGT',subjects:['Mathematics'],classes:[{c:'VI',s:'A'},{c:'VIII',s:'A'}]},
+];
+
+// Admin data
+const ADMINS = [
+  {id:'ADMIN001',u:'sanjeev.admin001',n:'Dr. Sanjeev Goyal',desig:'Secretary', phn:'8898898890'},
+  {id:'ADMIN002',u:'nidhi.admin002',n:'Dr. Nidhi Mehta',desig:'Director', phn:'9088703889'},
+    {id:'ADMIN003',u:'ashok.admin003',n:'Mr. Ashok Kumar',desig:'Management', phn:'8897765993'},
+  {id:'ADMIN004',u:'amit.admin004',n:'Mr. Amit Bansal',desig:'Management', phn:'7886983274'},
+  {id:'ADMIN005',u:'neha.admin005',n:'Dr. Neha Singhal',desig:'Management', phn:'7995467335'},
+  {id:'ADMIN006',u:'leela.admin006',n:'Dr. Leela Dhawan',desig:'Principal', phn:'7984355890'},
+  {id:'ADMIN007',u:'ansh.admin007',n:'Dr. Ansh Mehta',desig:'Vice Principal', phn:'7988597472'},
+  {id:'ADMIN008',u:'anu.admin008',n:'Dr. Anu Dhawan',desig:'Headmistress', phn:'9687758744'},
+  {id:'ADMIN009',u:'rkbansal.admin009',n:'Dr. R.K. Bansal',desig:'Dean Academics', phn:'7866947584'},
+{id:'ADMIN010',u:'siddharth.admin010',n:'Dr.Siddharth Chhaturvedi',desig:'Academic Head', phn:'9887946216'},
+  {id:'ADMIN011',u:'sheetal.admin011',n:'Dr. Sheetal Bhardwaj',desig:'Dean Cultural Affairs', phn:'7988645530'},
+];
+
+// ============================================================
+// STATE
+// ============================================================
+let currentUser = null;
+let currentPage = 'dashboard';
+let loginRole = 'student';
+
+// ============================================================
+// LOGIN LOGIC
+// ============================================================
+function switchLoginTab(role) {
+  loginRole = role;
+  document.querySelectorAll('.ltab').forEach((t,i)=>t.classList.toggle('active',['student','teacher','admin'][i]===role));
+  const hints = {
+    student:'<strong>Student demo:</strong> username: <code>yash.bajaj4</code> · ID: <code>SD012285</code>',
+    teacher:'<strong>Teacher demo:</strong> username: <code>anjali.sdpsd1250</code> · ID: <code>SDPSD1250</code>',
+    admin:'<strong>Admin demo:</strong> username: <code>leela.admin006</code> · ID: <code>ADMIN006</code>'
+  };
+  document.getElementById('login-hint').innerHTML = hints[role] + '<br><em style="font-size:11px">Password: school@2026 for all users</em>';
+}
+
+function doLogin() {
+  const uname = document.getElementById('login-username').value.trim().toLowerCase();
+  const sid = document.getElementById('login-schoolid').value.trim();
+  const pass = document.getElementById('login-password').value;
+  const errEl = document.getElementById('login-error');
+  errEl.style.display='none';
+  if(!uname||!sid||!pass){errEl.textContent='Please fill all fields.';errEl.style.display='block';return;}
+  if(pass!=='school@2026'){errEl.textContent='Incorrect password.';errEl.style.display='block';return;}
+
+  // Try student
+  let user = STUDENTS.find(s=>s.u.toLowerCase()===uname && s.id.toUpperCase()===sid.toUpperCase());
+  if(user){currentUser={...user,role:'student',class:user.c,section:user.s,name:user.n};initApp();return;}
+
+  // Try teacher
+  user = TEACHERS.find(t=>t.u.toLowerCase()===uname && t.id.toUpperCase()===sid.toUpperCase());
+  if(user){currentUser={...user,role:'teacher',name:user.n};initApp();return;}
+
+  // Try admin
+  user = ADMINS.find(a=>a.u.toLowerCase()===uname && a.id.toUpperCase()===sid.toUpperCase());
+  if(user){currentUser={...user,role:'admin',name:user.n};initApp();return;}
+
+  errEl.textContent='Invalid credentials. Check username, ID, and password.';
+  errEl.style.display='block';
+}
+
+document.getElementById('login-password').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+
+// ============================================================
+// APP INIT
+// ============================================================
+function initApp() {
+  document.getElementById('login-page').style.display='none';
+  document.getElementById('app').style.display='block';
+  const u = currentUser;
+  document.getElementById('sb-name').textContent = u.name;
+  document.getElementById('sb-id').textContent = u.id;
+  document.getElementById('top-avatar').textContent = u.name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+  const roleLabel = {student:'Student',teacher:'Teacher',admin:'Admin'}[u.role];
+  document.getElementById('sb-role-badge').innerHTML = `<span class="role-badge role-${u.role}">${roleLabel}</span>`;
+
+  // Check notifications
+  const myNotices = DB.notices.filter(n=>n.for.includes(u.role));
+  if(myNotices.length>0) document.getElementById('notif-dot').style.display='block';
+
+  buildSidebar();
+  showPage('dashboard');
+}
+
+function logout() {
+  currentUser = null;
+  document.getElementById('app').style.display='none';
+  document.getElementById('login-page').style.display='flex';
+  document.getElementById('login-username').value='';
+  document.getElementById('login-schoolid').value='';
+}
+
+// ============================================================
+// SIDEBAR BUILDER
+// ============================================================
+const NAV_STUDENT = [
+  {section:'Main'},
+  {id:'dashboard',icon:'🏠',label:'Dashboard'},
+  {id:'profile',icon:'👤',label:'My Profile'},
+  {section:'Academics'},
+  {id:'attendance',icon:'📅',label:'Attendance'},
+  {id:'homework',icon:'📚',label:'Homework'},
+  {id:'assignments',icon:'📝',label:'Assignments'},
+  {id:'coursematerial',icon:'📖',label:'Course Material'},
+  {id:'doubts',icon:'❓',label:'Ask Doubts'},
+  {id:'examplan',icon:'🗓️',label:'Exam Seating Plan'},
+  {id:'admitcard',icon:'🎫',label:'Admit Card'},
+  {section:'Administration'},
+  {id:'fees',icon:'💳',label:'Fee Payment'},
+  {id:'notices',icon:'🔔',label:'Notices & Circulars'},
+  {id:'transport',icon:'🚌',label:'Transport'},
+  {id:'grievance',icon:'🗣️',label:'Grievance Portal'},
+  {id:'application',icon:'📄',label:'Upload Application'},
+];
+
+const NAV_TEACHER = [
+  {section:'Main'},
+  {id:'dashboard',icon:'🏠',label:'Dashboard'},
+  {id:'profile',icon:'👤',label:'My Profile'},
+  {section:'Classroom'},
+  {id:'t-attendance',icon:'📅',label:'Mark Attendance'},
+  {id:'t-homework',icon:'📚',label:'Upload Homework'},
+  {id:'t-assignments',icon:'📝',label:'Upload Assignment'},
+  {id:'t-material',icon:'📖',label:'Course Material'},
+  {id:'t-doubts',icon:'❓',label:'Student Doubts'},
+  {id:'t-students',icon:'👩‍🎓',label:'Student Records'},
+  {section:'Communication'},
+  {id:'notices',icon:'🔔',label:'Notices'},
+  {id:'t-upload-notice',icon:'📢',label:'Upload Notice'},
+  {section:'Administration'},
+  {id:'t-salary',icon:'💰',label:'Salary Status'},
+  {id:'attendance',icon:'✅',label:'My Attendance'},
+  {id:'transport',icon:'🚌',label:'Transport'},
+  {id:'grievance',icon:'🗣️',label:'Grievance Portal'},
+  {id:'application',icon:'📄',label:'Application'},
+  {id:'t-resign',icon:'🚪',label:'Resignation'},
+];
+
+const NAV_ADMIN = [
+  {section:'Main'},
+  {id:'dashboard',icon:'🏠',label:'Dashboard'},
+  {id:'profile',icon:'👤',label:'My Profile'},
+  {section:'Directories'},
+  {id:'a-students',icon:'👩‍🎓',label:'Student Directory'},
+  {id:'a-teachers',icon:'👩‍🏫',label:'Teacher Directory'},
+  {section:'Academics'},
+  {id:'a-attendance',icon:'📅',label:'Teacher Attendance'},
+  {id:'a-exam',icon:'🗓️',label:'Exam Seating Plans'},
+  {id:'a-admitcards',icon:'🎫',label:'Admit Cards'},
+  {section:'Communication'},
+  {id:'notices',icon:'🔔',label:'All Notices'},
+  {id:'a-notice',icon:'📢',label:'Upload Notice'},
+  {id:'a-circular',icon:'📋',label:'Upload Circular'},
+  {id:'a-announce',icon:'⚡',label:'Urgent Announcement'},
+  {section:'Finance'},
+  {id:'a-salary',icon:'💰',label:'Pay Salaries'},
+  {section:'Administration'},
+  {id:'a-grievances',icon:'🗣️',label:'Grievances'},
+  {id:'a-transport',icon:'🚌',label:'Transport Requests'},
+  {id:'a-resign',icon:'🚪',label:'Resignations'},
+  {id:'a-docs',icon:'📁',label:'School Documents'},
+  {id:'a-letters',icon:'✉️',label:'Generate Letters'},
+];
+
+function buildSidebar() {
+  const nav = {student:NAV_STUDENT,teacher:NAV_TEACHER,admin:NAV_ADMIN}[currentUser.role];
+  const html = nav.map(item=>{
+    if(item.section) return `<div class="nav-section">${item.section}</div>`;
+    return `<div class="nav-item" id="nav-${item.id}" onclick="showPage('${item.id}')">${item.icon ? `<span class="nav-icon">${item.icon}</span>` : ''}<span>${item.label}</span></div>`;
+  }).join('');
+  document.getElementById('sidebar-nav').innerHTML = html;
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+// ============================================================
+// PAGE ROUTER
+// ============================================================
+function showPage(pageId) {
+  currentPage = pageId;
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const nav = document.getElementById(`nav-${pageId}`);
+  if(nav) nav.classList.add('active');
+
+  const titles = {
+    dashboard:'Dashboard',profile:'My Profile',attendance:'Attendance',homework:'Homework',
+    assignments:'Assignments',coursematerial:'Course Material',doubts:'Ask Doubts',
+    examplan:'Exam Seating Plan',admitcard:'Admit Card',fees:'Fee & Payments',
+    notices:'Notices & Circulars',transport:'Transport',grievance:'Grievance Portal',
+    application:'Upload Application','t-attendance':'Mark Attendance','t-homework':'Upload Homework',
+    't-assignments':'Upload Assignment','t-material':'Course Material','t-doubts':'Student Doubts',
+    't-students':'Student Records','t-upload-notice':'Upload Notice','t-salary':'Salary Status',
+    't-resign':'Resignation Portal','a-students':'Student Directory','a-teachers':'Teacher Directory',
+    'a-attendance':'Teacher Attendance','a-exam':'Exam Seating Plans','a-admitcards':'Admit Cards',
+    'a-notice':'Upload Notice','a-circular':'Upload Circular','a-announce':'Urgent Announcement',
+    'a-salary':'Salary Management','a-grievances':'Grievance Portal','a-transport':'Transport Requests',
+    'a-resign':'Resignation Requests','a-docs':'School Documents','a-letters':'Generate Letters',
+  };
+  document.getElementById('topbar-title').textContent = titles[pageId] || pageId;
+
+  const renderer = {
+    dashboard: renderDashboard,
+    profile: renderProfile,
+    attendance: renderAttendance,
+    homework: renderHomework,
+    assignments: renderAssignments,
+    coursematerial: renderCourseMaterial,
+    doubts: renderDoubts,
+    examplan: renderExamPlan,
+    admitcard: renderAdmitCard,
+    fees: renderFees,
+    notices: renderNotices,
+    transport: renderTransport,
+    grievance: renderGrievance,
+    application: renderApplication,
+    't-attendance': renderTeacherAttendance,
+    't-homework': renderTeacherHomework,
+    't-assignments': renderTeacherAssignment,
+    't-material': renderTeacherMaterial,
+    't-doubts': renderTeacherDoubts,
+    't-students': renderTeacherStudents,
+    't-upload-notice': renderTeacherNotice,
+    't-salary': renderTeacherSalary,
+    't-resign': renderTeacherResign,
+    'a-students': renderAdminStudents,
+    'a-teachers': renderAdminTeachers,
+    'a-attendance': renderAdminAttendance,
+    'a-exam': renderAdminExam,
+    'a-admitcards': renderAdminAdmitCards,
+    'a-notice': renderAdminNotice,
+    'a-circular': renderAdminCircular,
+    'a-announce': renderAdminAnnounce,
+    'a-salary': renderAdminSalary,
+    'a-grievances': renderAdminGrievances,
+    'a-transport': renderAdminTransport,
+    'a-resign': renderAdminResign,
+    'a-docs': renderAdminDocs,
+    'a-letters': renderAdminLetters,
+  };
+
+  const fn = renderer[pageId];
+  document.getElementById('main-content').innerHTML = fn ? fn() : `<div class="page-header"><h1>${titles[pageId]||pageId}</h1></div><div class="card"><p>This section is under development.</p></div>`;
+}
+
+// ============================================================
+// HELPERS
+// ============================================================
+function showModal(title, content) {
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-content').innerHTML = content;
+  document.getElementById('modal-overlay').style.display='flex';
+}
+function closeModal(e) {
+  if(!e || e.target===document.getElementById('modal-overlay'))
+    document.getElementById('modal-overlay').style.display='none';
+}
+function toast(msg, type='success') {
+  const t = document.createElement('div');
+  t.className = `alert alert-${type}`;
+  t.style.cssText='position:fixed;bottom:24px;right:24px;z-index:9999;width:320px;box-shadow:0 4px 20px rgba(0,0,0,.15)';
+  t.innerHTML = `<span>${type==='success'?'✅':type==='danger'?'❌':'ℹ️'}</span> ${msg}`;
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(), 3000);
+}
+function fmt(cls, sec) { return cls && sec ? `${cls}-${sec}` : (cls||''); }
+function myClasses() {
+  if(currentUser.role==='student') return [{c:currentUser.class,s:currentUser.section}];
+  if(currentUser.role==='teacher') return currentUser.classes||[];
+  return [];
+}
+function filterForMe(arr) {
+  const mc = myClasses();
+  return arr.filter(item=>mc.some(x=>x.c===item.class && x.s===item.section));
+}
+
+// ============================================================
+// DASHBOARD
+// ============================================================
+function renderDashboard() {
+  const u = currentUser;
+  if(u.role==='student') return renderStudentDashboard();
+  if(u.role==='teacher') return renderTeacherDashboard();
+  return renderAdminDashboard();
+}
+
+function renderStudentDashboard() {
+  const hw = filterForMe(DB.homeworks);
+  const asgn = filterForMe(DB.assignments);
+  const att = DB.attendanceData[currentUser.id] || {present:0,absent:0,total:0};
+  const attPct = att.total ? Math.round(att.present/att.total*100) : 0;
+  const fees = DB.feeData[currentUser.id];
+  const pendingFee = fees ? fees.dues.filter(d=>d.status==='pending').reduce((s,d)=>s+d.amount,0) : 0;
+  const urgents = DB.urgentAnnouncements;
+
+  return `
+  ${urgents.length ? urgents.map(u=>`<div class="urgent-banner"><span class="ub-icon">⚡</span><div class="ub-text"><strong>Urgent Announcement</strong><span>${u.text}</span></div></div>`).join('') : ''}
+  <div class="page-header"><h1>Welcome back, ${currentUser.name.split(' ')[0]}! 👋</h1><p>Class ${fmt(currentUser.class,currentUser.section)} · Academic Session 2026-27</p></div>
+  <div class="grid-4">
+    <div class="stat-card stat-green"><div class="stat-icon si-green">📅</div><div class="stat-num">${attPct}%</div><div class="stat-label">Attendance</div><div class="progress-bar"><div class="progress-fill ${attPct>=75?'pf-green':attPct>=60?'pf-orange':'pf-red'}" style="width:${attPct}%"></div></div></div>
+    <div class="stat-card stat-blue"><div class="stat-icon si-blue">📚</div><div class="stat-num">${hw.length}</div><div class="stat-label">Pending Homework</div></div>
+    <div class="stat-card stat-purple"><div class="stat-icon si-purple">📝</div><div class="stat-num">${asgn.length}</div><div class="stat-label">Active Assignments</div></div>
+    <div class="stat-card stat-orange"><div class="stat-icon si-orange">💳</div><div class="stat-num">₹${pendingFee.toLocaleString()}</div><div class="stat-label">Pending Fee</div></div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><h3>📚 Recent Homework</h3><button class="btn btn-sm btn-outline" onclick="showPage('homework')">View All</button></div>
+      ${hw.slice(0,3).map(h=>`<div class="hw-card"><div class="hw-header"><span class="hw-sub">${h.subject}</span><span class="badge badge-orange">Due ${h.dueDate}</span></div><div class="hw-title">${h.title}</div><div class="hw-due">${h.uploadedBy}</div></div>`).join('') || '<div class="empty-state"><div class="es-icon">🎉</div><p>No pending homework!</p></div>'}
+    </div>
+    <div class="card">
+      <div class="card-header"><h3>🔔 Latest Notices</h3><button class="btn btn-sm btn-outline" onclick="showPage('notices')">View All</button></div>
+      ${DB.notices.filter(n=>n.for.includes('student')).slice(0,3).map(n=>`<div class="notice-card"><div class="nc-header"><span class="nc-title">${n.title}</span><span class="badge ${n.type==='urgent'?'badge-red':'badge-blue'}">${n.type}</span></div><div class="nc-meta">📅 ${n.date} · By ${n.author}</div></div>`).join('')}
+    </div>
+  </div>`;
+}
+
+function renderTeacherDashboard() {
+  const myC = myClasses();
+  const classLabel = myC.map(c=>`${c.c}-${c.s}`).join(', ');
+  return `
+  <div class="page-header"><h1>Welcome, ${currentUser.name}! 👋</h1><p>${currentUser.desig} · Classes: ${classLabel} · Session 2026-27</p></div>
+  <div class="grid-4">
+    <div class="stat-card stat-blue"><div class="stat-icon si-blue">👩‍🎓</div><div class="stat-num">${myC.reduce((s,c)=>s+STUDENTS.filter(st=>st.c===c.c&&st.s===c.s).length,0)}</div><div class="stat-label">My Students</div></div>
+    <div class="stat-card stat-green"><div class="stat-icon si-green">📚</div><div class="stat-num">${filterForMe(DB.homeworks).length}</div><div class="stat-label">Homework Uploaded</div></div>
+    <div class="stat-card stat-purple"><div class="stat-icon si-purple">❓</div><div class="stat-num">${filterForMe(DB.doubts).filter(d=>d.status==='pending').length}</div><div class="stat-label">Pending Doubts</div></div>
+    <div class="stat-card stat-orange"><div class="stat-icon si-orange">📝</div><div class="stat-num">${filterForMe(DB.assignments).length}</div><div class="stat-label">Active Assignments</div></div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><h3>👩‍🎓 My Students</h3><button class="btn btn-sm btn-outline" onclick="showPage('t-students')">View All</button></div>
+      <div class="scroll-table"><table><thead><tr><th>Name</th><th>Class</th><th>ID</th></tr></thead><tbody>
+      ${myC.flatMap(c=>STUDENTS.filter(st=>st.c===c.c&&st.s===c.s)).slice(0,6).map(st=>`<tr><td>${st.n}</td><td><span class="badge badge-blue">${fmt(st.c,st.s)}</span></td><td><code>${st.id}</code></td></tr>`).join('')}
+      </tbody></table></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><h3>🔔 Staff Notices</h3></div>
+      ${DB.notices.filter(n=>n.for.includes('teacher')).slice(0,4).map(n=>`<div class="notice-card"><div class="nc-header"><span class="nc-title">${n.title}</span></div><div class="nc-meta">📅 ${n.date}</div></div>`).join('')}
+    </div>
+  </div>`;
+}
+
+function renderAdminDashboard() {
+  return `
+  <div class="page-header"><h1>Admin Dashboard 🛡️</h1><p>${currentUser.desig} · S.D. Public School Duplicate, Jagadhri · Session 2026-27</p></div>
+  <div class="grid-4">
+    <div class="stat-card stat-blue"><div class="stat-icon si-blue">👩‍🎓</div><div class="stat-num">3,454</div><div class="stat-label">Total Students</div></div>
+    <div class="stat-card stat-green"><div class="stat-icon si-green">👩‍🏫</div><div class="stat-num">500</div><div class="stat-label">Teaching Staff</div></div>
+    <div class="stat-card stat-purple"><div class="stat-icon si-purple">🏫</div><div class="stat-num">85</div><div class="stat-label">Class Sections</div></div>
+    <div class="stat-card stat-orange"><div class="stat-icon si-orange">🗣️</div><div class="stat-num">${DB.grievances.length}</div><div class="stat-label">Open Grievances</div></div>
+  </div>
+  <div class="grid-3">
+    <div class="stat-card stat-red"><div class="stat-icon si-red">🚌</div><div class="stat-num">${DB.transportRequests.filter(r=>r.status==='pending').length}</div><div class="stat-label">Transport Pending</div></div>
+    <div class="stat-card stat-purple"><div class="stat-icon si-purple">🚪</div><div class="stat-num">${DB.resignations.filter(r=>r.status==='pending').length}</div><div class="stat-label">Resign Requests</div></div>
+    <div class="stat-card stat-blue"><div class="stat-icon si-blue">📢</div><div class="stat-num">${DB.notices.length}</div><div class="stat-label">Active Notices</div></div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><h3>📊 Wing Statistics</h3></div>
+      ${[['Pre-Primary Wing','Pre-Nursery, Nursery, K.G.','621','18%','badge-green'],['Primary Wing','Class I – V','1037','30%','badge-blue'],['Secondary Wing','Class VI – XII','1796','52%','badge-purple']].map(([w,c,n,p,b])=>`<div class="fee-row"><div><strong>${w}</strong><br><span style="font-size:12px;color:var(--text2)">${c}</span></div><div style="text-align:right"><span class="badge ${b}">${n} students</span><br><span style="font-size:12px;color:var(--text2)">${p}</span></div></div>`).join('')}
+    </div>
+    <div class="card">
+      <div class="card-header"><h3>🔔 Recent Notices</h3><button class="btn btn-sm btn-primary" onclick="showPage('a-notice')">+ Add Notice</button></div>
+      ${DB.notices.slice(0,4).map(n=>`<div class="notice-card"><div class="nc-header"><span class="nc-title">${n.title}</span><span class="badge ${n.type==='urgent'?'badge-red':'badge-blue'}">${n.type}</span></div><div class="nc-meta">📅 ${n.date} · By ${n.author}</div></div>`).join('')}
+    </div>
+  </div>`;
+}
+
+// ============================================================
+// PROFILE
+// ============================================================
+function renderProfile() {
+  const u = currentUser;
+  const initials = u.name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+  let details = '';
+  if(u.role==='student'){
+    details=`<div class="detail-row"><span class="detail-label">Class & Section</span><span class="detail-value">${fmt(u.class,u.section)}</span></div>
+    <div class="detail-row"><span class="detail-label">Student ID</span><span class="detail-value"><code>${u.id}</code></span></div>
+    <div class="detail-row"><span class="detail-label">Username</span><span class="detail-value">${u.u}</span></div>
+    <div class="detail-row"><span class="detail-label">Email</span><span class="detail-value">${u.u}@sdpsdj.edu.in</span></div>
+    <div class="detail-row"><span class="detail-label">Academic Year</span><span class="detail-value">2026-27</span></div>
+    <div class="detail-row"><span class="detail-label">School</span><span class="detail-value">S.D. Public School Duplicate, Jagadhri</span></div>`;
+  } else if(u.role==='teacher'){
+    details=`<div class="detail-row"><span class="detail-label">Teacher ID</span><span class="detail-value"><code>${u.id}</code></span></div>
+    <div class="detail-row"><span class="detail-label">Designation</span><span class="detail-value">${u.desig}</span></div>
+    <div class="detail-row"><span class="detail-label">Subjects</span><span class="detail-value">${u.subjects?.join(', ')||'—'}</span></div>
+    <div class="detail-row"><span class="detail-label">Assigned Classes</span><span class="detail-value">${(u.classes||[]).map(c=>`${c.c}-${c.s}`).join(', ')}</span></div>
+    <div class="detail-row"><span class="detail-label">Email</span><span class="detail-value">${u.u}@sdpsdj.edu.in</span></div>`;
+  } else {
+    details=`<div class="detail-row"><span class="detail-label">Admin ID</span><span class="detail-value"><code>${u.id}</code></span></div>
+    <div class="detail-row"><span class="detail-label">Designation</span><span class="detail-value">${u.desig}</span></div>
+    <div class="detail-row"><span class="detail-label">Email</span><span class="detail-value">${u.u}@sdpsdj.edu.in</span></div>`;
+  }
+  return `<div class="profile-header"><div class="profile-avatar">${initials}</div><div class="profile-info"><h2>${u.name}</h2><p>${u.role==='student'?`Class ${fmt(u.class,u.section)} · ${u.id}`:u.role==='teacher'?`${u.desig} · ${u.id}`:`${u.desig} · ${u.id}`}</p></div></div>
+  <div class="card">${details}</div>`;
+}
+
+// ============================================================
+// ATTENDANCE (Student)
+// ============================================================
+function renderAttendance() {
+  if(currentUser.role==='teacher') {
+    const sal = DB.teacherAttendance[currentUser.id] || {present:18,absent:1,leave:1,total:20};
+    const pct = Math.round(sal.present/sal.total*100);
+    return `<div class="page-header"><h1>My Attendance</h1></div>
+    <div class="grid-4">
+      <div class="stat-card stat-green"><div class="stat-icon si-green">✅</div><div class="stat-num">${sal.present}</div><div class="stat-label">Present Days</div></div>
+      <div class="stat-card stat-red"><div class="stat-icon si-red">❌</div><div class="stat-num">${sal.absent}</div><div class="stat-label">Absent Days</div></div>
+      <div class="stat-card stat-orange"><div class="stat-icon si-orange">🏖️</div><div class="stat-num">${sal.leave}</div><div class="stat-label">Leave Days</div></div>
+      <div class="stat-card stat-blue"><div class="stat-icon si-blue">📊</div><div class="stat-num">${pct}%</div><div class="stat-label">Percentage</div></div>
+    </div>`;
+  }
+  const att = DB.attendanceData[currentUser.id] || {present:18,absent:2,leave:0,total:20,days:{}};
+  const pct = att.total ? Math.round(att.present/att.total*100) : 0;
+  const days = att.days||{};
+  const dayNames = ['S','M','T','W','T','F','S'];
+  const dayGrid = Object.entries(days).map(([d,s])=>`<div class="att-day att-${s.toLowerCase()}" title="Day ${d}: ${s==='P'?'Present':s==='A'?'Absent':s==='H'?'Holiday':'Leave'}">${d}</div>`).join('');
+  return `<div class="page-header"><h1>My Attendance – June 2026</h1></div>
+  <div class="grid-4">
+    <div class="stat-card stat-green"><div class="stat-icon si-green">✅</div><div class="stat-num">${att.present}</div><div class="stat-label">Present</div></div>
+    <div class="stat-card stat-red"><div class="stat-icon si-red">❌</div><div class="stat-num">${att.absent}</div><div class="stat-label">Absent</div></div>
+    <div class="stat-card stat-orange"><div class="stat-icon si-orange">🏖️</div><div class="stat-num">${att.leave}</div><div class="stat-label">Leave</div></div>
+    <div class="stat-card stat-blue"><div class="stat-icon si-blue">📊</div><div class="stat-num">${pct}%</div><div class="stat-label">Percentage</div></div>
+  </div>
+  <div class="card"><div class="card-header"><h3>Attendance Calendar – June 2026</h3></div>
+  <div style="display:flex;gap:16px;margin-bottom:12px;flex-wrap:wrap">
+    <span style="font-size:12px;color:var(--text2)"><span style="display:inline-block;width:14px;height:14px;background:#e8f8f2;border-radius:3px;vertical-align:middle;margin-right:4px"></span>Present</span>
+    <span style="font-size:12px;color:var(--text2)"><span style="display:inline-block;width:14px;height:14px;background:#fce8e8;border-radius:3px;vertical-align:middle;margin-right:4px"></span>Absent</span>
+    <span style="font-size:12px;color:var(--text2)"><span style="display:inline-block;width:14px;height:14px;background:#f0f2f8;border-radius:3px;vertical-align:middle;margin-right:4px"></span>Holiday</span>
+  </div>
+  <div class="att-grid">${dayGrid}</div>
+  <div style="margin-top:16px"><div class="progress-bar" style="height:12px"><div class="progress-fill ${pct>=75?'pf-green':pct>=60?'pf-orange':'pf-red'}" style="width:${pct}%"></div></div>
+  <p style="font-size:12px;color:var(--text2);margin-top:6px">${pct>=75?'✅ Attendance is satisfactory.':'⚠️ Attendance below required 75%. Please attend regularly.'}</p></div></div>`;
+}
+
+// ============================================================
+// HOMEWORK (Student)
+// ============================================================
+function renderHomework() {
+  const hw = filterForMe(DB.homeworks);
+  return `<div class="page-header"><h1>Homework</h1><p>Class ${fmt(currentUser.class,currentUser.section)}</p></div>
+  ${hw.length===0?'<div class="empty-state"><div class="es-icon">🎉</div><p>No pending homework assigned!</p></div>':
+  hw.map(h=>`<div class="hw-card">
+    <div class="hw-header"><span class="hw-sub">${h.subject}</span><span class="badge badge-orange">Due: ${h.dueDate}</span></div>
+    <div class="hw-title">${h.title}</div>
+    <div class="nc-body">${h.desc}</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;flex-wrap:wrap;gap:8px">
+      <span style="font-size:12px;color:var(--text2)">Assigned by: ${h.uploadedBy}</span>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        ${h.attachments.map(a=>`<button class="btn btn-sm btn-outline" onclick="toast('Downloading ${a}...')">📎 ${a}</button>`).join('')}
+        <button class="btn btn-sm btn-primary" onclick="toast('Homework submitted successfully!','success')">Submit ✓</button>
+      </div>
+    </div>
+  </div>`).join('')}`;
+}
+
+// ============================================================
+// ASSIGNMENTS (Student)
+// ============================================================
+function renderAssignments() {
+  const asgns = filterForMe(DB.assignments);
+  return `<div class="page-header"><h1>Assignments</h1></div>
+  ${asgns.length===0?'<div class="empty-state"><div class="es-icon">📝</div><p>No active assignments.</p></div>':
+  asgns.map(a=>`<div class="card" style="margin-bottom:16px">
+    <div class="card-header"><h3>${a.title}</h3><span class="badge badge-${a.status==='active'?'green':'gray'}">${a.status}</span></div>
+    <div class="form-row">
+      <div><span class="subject-chip">${a.subject}</span></div>
+      <div style="flex:1"><span style="font-size:12px;color:var(--text2)">Max Marks: <strong>${a.maxMarks}</strong> · Due: <strong>${a.dueDate}</strong></span></div>
+    </div>
+    <p style="font-size:13px;color:var(--text);margin:8px 0">${a.desc}</p>
+    <div style="margin-top:12px">
+      <div class="upload-zone" onclick="toast('File upload simulated. In production, file picker would open.','info')">
+        <div class="uz-icon">📎</div>
+        <p>Click to upload your assignment</p>
+        <span>PDF, DOC, DOCX, JPG accepted · Max 10 MB</span>
+      </div>
+      <button class="btn btn-primary" style="margin-top:12px" onclick="toast('Assignment submitted successfully!','success')">Submit Assignment</button>
+    </div>
+  </div>`).join('')}`;
+}
+
+// ============================================================
+// COURSE MATERIAL (Student)
+// ============================================================
+function renderCourseMaterial() {
+  const mats = filterForMe(DB.courseMaterial);
+  const subjects = [...new Set(mats.map(m=>m.subject))];
+  return `<div class="page-header"><h1>Course Material</h1><p>Class ${fmt(currentUser.class,currentUser.section)}</p></div>
+  ${subjects.map(sub=>`<div class="card" style="margin-bottom:16px">
+    <div class="card-header"><h3>${sub}</h3></div>
+    <table><thead><tr><th>Title</th><th>Type</th><th>Size</th><th>Date</th><th>Action</th></tr></thead>
+    <tbody>${mats.filter(m=>m.subject===sub).map(m=>`<tr><td><strong>${m.title}</strong></td><td><span class="badge badge-blue">${m.type.toUpperCase()}</span></td><td>${m.size}</td><td>${m.date}</td><td><button class="btn btn-sm btn-outline" onclick="toast('Downloading ${m.title}...')">⬇ Download</button></td></tr>`).join('')}</tbody>
+    </table></div>`).join('')||'<div class="empty-state"><div class="es-icon">📚</div><p>No course material uploaded yet.</p></div>'}`;
+}
+
+// ============================================================
+// DOUBTS (Student)
+// ============================================================
+function renderDoubts() {
+  const myDoubts = DB.doubts.filter(d=>d.askedById===currentUser.id);
+  return `<div class="page-header"><h1>Ask Doubts</h1></div>
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header"><h3>Post a New Doubt</h3></div>
+    <div class="form-row">
+      <div class="form-group2"><label>Subject</label><select id="d-sub"><option>Mathematics</option><option>Science</option><option>English</option><option>Hindi</option><option>Social Studies</option></select></div>
+      <div class="form-group2" style="flex:3"><label>Your Question</label><textarea id="d-q" placeholder="Describe your doubt clearly..."></textarea></div>
+    </div>
+    <button class="btn btn-primary" onclick="submitDoubt()">Post Doubt</button>
+  </div>
+  <div class="card">
+    <div class="card-header"><h3>My Doubts</h3></div>
+    ${myDoubts.length===0?'<div class="empty-state"><div class="es-icon">❓</div><p>No doubts posted yet.</p></div>':
+    myDoubts.map(d=>`<div style="margin-bottom:16px;border-bottom:1px solid var(--border);padding-bottom:16px">
+      <div class="chat-msg student-msg"><strong>${d.question}</strong><br><span style="font-size:11px;opacity:.7">${d.askedBy} · ${d.date} · ${d.subject}</span></div>
+      ${d.reply?`<div class="chat-msg teacher-reply" style="margin-top:8px">💬 <strong>${d.repliedBy}:</strong> ${d.reply}<br><span style="font-size:11px;color:var(--text2)">${d.replyDate}</span></div>`:`<div style="padding:8px;font-size:12px;color:var(--text2)">⏳ Awaiting teacher reply...</div>`}
+    </div>`).join('')}
+  </div>`;
+}
+function submitDoubt() {
+  const q = document.getElementById('d-q').value.trim();
+  const sub = document.getElementById('d-sub').value;
+  if(!q){toast('Please enter your question.','danger');return;}
+  DB.doubts.push({id:Date.now(),class:currentUser.class,section:currentUser.section,subject:sub,question:q,askedBy:currentUser.name,askedById:currentUser.id,date:'2026-06-18',reply:'',repliedBy:'',replyDate:'',status:'pending'});
+  toast('Doubt posted successfully! Teacher will reply soon.','success');
+  showPage('doubts');
+}
+
+// ============================================================
+// EXAM PLAN (Student)
+// ============================================================
+function renderExamPlan() {
+  const cls = currentUser.class; const sec = currentUser.section;
+  const plans = DB.examSitting.filter(e=>e.class===cls&&e.section===sec);
+  return `<div class="page-header"><h1>Examination Seating Plan</h1><p>Class ${fmt(cls,sec)}</p></div>
+  ${plans.length===0?'<div class="empty-state"><div class="es-icon">🗓️</div><p>Seating plan not uploaded yet.</p></div>':
+  plans.map(p=>`<div class="card" style="margin-bottom:16px">
+    <div class="card-header"><h3>${p.exam}</h3><span class="badge badge-blue">${p.subject}</span></div>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:16px">📅 ${p.date} · 🏛️ ${p.hall}</p>
+    <div class="sitting-table">
+      ${p.rows.map(row=>`<div class="seat-row">${row.map(seat=>`<div class="seat ${seat.id===currentUser.id?'assigned':''}">
+        <div class="seat-num">S${seat.seat}</div>
+        <div style="font-size:10px;font-weight:${seat.id===currentUser.id?'700':'400'};color:${seat.id===currentUser.id?'var(--accent)':'var(--text)'}">${seat.name}</div>
+        ${seat.id===currentUser.id?`<div style="font-size:10px;color:var(--accent)">◀ You</div>`:''}
+      </div>`).join('')}</div>`).join('')}
+    </div>
+  </div>`).join('')}`;
+}
+
+// ============================================================
+// ADMIT CARD (Student)
+// ============================================================
+function renderAdmitCard() {
+  return `<div class="page-header"><h1>Examination Admit Card</h1></div>
+  <div class="admit-card">
+   <a href=""
+  </div>`;
+}
+
+// ============================================================
+// FEES (Student)
+// ============================================================
+function renderFees() {
+  const feeInfo = DB.feeData[currentUser.id] || {dues:[]};
+  const pending = feeInfo.dues.filter(d=>d.status==='pending');
+  const paid = feeInfo.dues.filter(d=>d.status==='paid');
+  return `<div class="page-header"><h1>Fee & Payments</h1></div>
+  <div class="grid-2" style="margin-bottom:20px">
+    <div class="stat-card stat-green"><div class="stat-icon si-green">✅</div><div class="stat-num">₹${paid.reduce((s,d)=>s+d.amount,0).toLocaleString()}</div><div class="stat-label">Total Paid</div></div>
+    <div class="stat-card stat-orange"><div class="stat-icon si-orange">⏳</div><div class="stat-num">₹${pending.reduce((s,d)=>s+d.amount,0).toLocaleString()}</div><div class="stat-label">Pending Amount</div></div>
+  </div>
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-header"><h3>Fee Summary</h3></div>
+    ${feeInfo.dues.map(d=>`<div class="fee-row">
+      <div><strong>${d.term}</strong>${d.date?`<br><span style="font-size:11px;color:var(--text2)">Paid on ${d.date}</span>`:''}</div>
+      <div style="text-align:right;display:flex;align-items:center;gap:12px">
+        <strong>₹${d.amount.toLocaleString()}</strong>
+        <span class="badge ${d.status==='paid'?'badge-green':'badge-orange'}">${d.status}</span>
+        ${d.status==='paid'?`<button class="btn btn-sm btn-outline" onclick="toast('Receipt ${d.receipt} downloading...','success')">🧾 Receipt</button>`:`<button class="btn btn-sm btn-primary" onclick="toast('Redirecting to payment gateway...','info')">Pay Now</button>`}
+      </div>
+    </div>`).join('')}
+  </div>`;
+}
+
+// ============================================================
+// NOTICES (All roles)
+// ============================================================
+function renderNotices() {
+  const role = currentUser.role;
+  const myNotices = DB.notices.filter(n=>n.for.includes(role));
+  const myCirculars = DB.circulars.filter(c=>c.for.includes(role));
+  const urgents = DB.urgentAnnouncements;
+  return `<div class="page-header"><h1>Notices & Circulars</h1></div>
+  ${urgents.map(u=>`<div class="urgent-banner"><span class="ub-icon">⚡</span><div class="ub-text"><strong>Urgent Announcement</strong><span>${u.text}</span></div><span style="font-size:11px;margin-left:auto;opacity:.7">${u.date}</span></div>`).join('')}
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab(this,'tab-notices')">Notices (${myNotices.length})</div>
+    <div class="tab" onclick="switchTab(this,'tab-circulars')">Circulars (${myCirculars.length})</div>
+  </div>
+  <div id="tab-notices">
+    ${myNotices.map(n=>`<div class="notice-card">
+      <div class="nc-header"><span class="nc-title">${n.title}</span><span class="badge ${n.type==='urgent'?'badge-red':n.type==='staff'?'badge-purple':'badge-blue'}">${n.type}</span></div>
+      <div class="nc-meta">📅 ${n.date} · By ${n.author}</div>
+      <div class="nc-body">${n.body}</div>
+    </div>`).join('')}
+  </div>
+  <div id="tab-circulars" style="display:none">
+    ${myCirculars.map(c=>`<div class="notice-card">
+      <div class="nc-header"><span class="nc-title">${c.title}</span><span class="badge badge-purple">circular</span></div>
+      <div class="nc-meta">📅 ${c.date} · By ${c.author}</div>
+      <div class="nc-body">${c.body}</div>
+      <button class="btn btn-sm btn-outline" style="margin-top:8px" onclick="toast('Circular downloading...')">⬇ Download PDF</button>
+    </div>`).join('')}
+  </div>`;
+}
+function switchTab(el, showId) {
+  el.closest('.tabs').querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  const parent = el.closest('.main-content')||el.closest('#main-content')||document.getElementById('main-content');
+  const allSections = showId.includes('notices')||showId.includes('circulars') ? ['tab-notices','tab-circulars'] : null;
+  if(allSections) allSections.forEach(id=>{const el2=document.getElementById(id);if(el2)el2.style.display=id===showId?'block':'none';});
+}
+
+// ============================================================
+// TRANSPORT (Student/Teacher)
+// ============================================================
+function renderTransport() {
+  const myReqs = DB.transportRequests.filter(r=>r.id_===currentUser.id);
+  return `<div class="page-header"><h1>Transport</h1></div>
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header"><h3>Apply for Transport</h3></div>
+    <div class="form-row">
+      <div class="form-group2"><label>Request Type</label><select><option>New Registration</option><option>Route Change</option><option>Stop Change</option><option>Cancellation</option></select></div>
+      <div class="form-group2"><label>Preferred Route</label><select><option>Route 1 – Civil Lines</option><option>Route 2 – Model Town</option><option>Route 3 – Industrial Area</option><option>Route 4 – Sector 12</option></select></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group2" style="flex:2"><label>Nearest Stop / Address</label><input type="text" placeholder="Enter your address or stop name"></div>
+    </div>
+    <div class="form-group2"><label>Additional Notes</label><textarea placeholder="Any special requirements..."></textarea></div>
+    <button class="btn btn-primary" style="margin-top:12px" onclick="toast('Transport request submitted! Admin will review and respond.','success')">Submit Request</button>
+  </div>
+  <div class="card">
+    <div class="card-header"><h3>My Requests</h3></div>
+    ${myReqs.length===0?'<div class="empty-state"><p>No transport requests submitted.</p></div>':
+    myReqs.map(r=>`<div class="notice-card"><div class="nc-header"><strong>${r.route}</strong><span class="badge ${r.status==='approved'?'badge-green':r.status==='pending'?'badge-orange':'badge-red'}">${r.status}</span></div><div class="nc-meta">Stop: ${r.stop} · ${r.date}</div></div>`).join('')}
+  </div>`;
+}
+
+// ============================================================
+// GRIEVANCE (Student/Teacher)
+// ============================================================
+function renderGrievance() {
+  const myG = DB.grievances.filter(g=>g.submittedById===currentUser.id);
+  return `<div class="page-header"><h1>Grievance Portal</h1></div>
+  <div class="alert alert-info">ℹ️ Submit any grievance regarding academics, behaviour, facilities, or administration. All submissions are confidential.</div>
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header"><h3>Submit New Grievance</h3></div>
+    <div class="form-row">
+      <div class="form-group2"><label>Category</label><select><option>Academic</option><option>Administrative</option><option>Facility</option><option>Behaviour</option><option>Other</option></select></div>
+      <div class="form-group2" style="flex:2"><label>Subject</label><input type="text" placeholder="Brief description of grievance"></div>
+    </div>
+    <div class="form-group2"><label>Detailed Description</label><textarea placeholder="Describe your grievance in detail..."></textarea></div>
+    <button class="btn btn-primary" style="margin-top:12px" onclick="toast('Grievance submitted successfully. You will receive a response within 7 working days.','success')">Submit Grievance</button>
+  </div>
+  <div class="card">
+    <div class="card-header"><h3>My Grievances</h3></div>
+    ${myG.length===0?'<div class="empty-state"><p>No grievances submitted.</p></div>':
+    myG.map(g=>`<div class="notice-card"><div class="nc-header"><strong>${g.title}</strong><span class="badge badge-orange">${g.status}</span></div><div class="nc-meta">📅 ${g.date} · ${g.type}</div><div class="nc-body">${g.desc}</div>${g.response?`<div class="alert alert-success" style="margin-top:8px">📋 Response: ${g.response}</div>`:''}</div>`).join('')}
+  </div>`;
+}
+
+// ============================================================
+// APPLICATION (Student/Teacher)
+// ============================================================
+function renderApplication() {
+  const myApps = DB.applications.filter(a=>a.fromId===currentUser.id);
+  return `<div class="page-header"><h1>Upload Application</h1></div>
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header"><h3>Submit New Application</h3></div>
+    <div class="form-row">
+      <div class="form-group2"><label>Application Type</label><select><option>Leave Application</option><option>Medical Certificate</option><option>TC Request</option><option>Document Request</option><option>Other</option></select></div>
+      <div class="form-group2" style="flex:2"><label>Subject</label><input type="text" id="app-subject" placeholder="Subject of application"></div>
+    </div>
+    <div class="form-group2"><label>Application Body</label><textarea id="app-body" placeholder="Write your application here..." style="min-height:120px"></textarea></div>
+    <div class="upload-zone" onclick="toast('File picker would open in production.','info')" style="margin-top:12px">
+      <div class="uz-icon">📎</div><p>Attach supporting documents (optional)</p><span>PDF, JPG, PNG · Max 5 MB</span>
+    </div>
+    <button class="btn btn-primary" style="margin-top:12px" onclick="toast('Application submitted to administration.','success')">Submit Application</button>
+  </div>
+  <div class="card">
+    <div class="card-header"><h3>My Applications</h3></div>
+    ${myApps.map(a=>`<div class="notice-card"><div class="nc-header"><strong>${a.subject}</strong><span class="badge ${a.status==='approved'?'badge-green':a.status==='pending'?'badge-orange':'badge-red'}">${a.status}</span></div><div class="nc-meta">${a.type} · ${a.date}</div><div class="nc-body">${a.body}</div>${a.response?`<div class="alert alert-success" style="margin-top:8px">✅ Response: ${a.response}</div>`:''}</div>`).join('')||'<div class="empty-state"><p>No applications submitted.</p></div>'}
+  </div>`;
+}
+
+// ============================================================
+// TEACHER: MARK ATTENDANCE
+// ============================================================
+function renderTeacherAttendance() {
+  const mc = myClasses();
+  const selClass = mc[0]||{c:'IX',s:'A'};
+  const students = STUDENTS.filter(st=>st.c===selClass.c&&st.s===selClass.s);
+  return `<div class="page-header"><h1>Mark Attendance</h1></div>
+  <div class="card" style="margin-bottom:16px">
+    <div class="filter-row">
+      <div class="form-group2"><label>Class & Section</label><select onchange="renderTeacherAttendanceFor(this.value)">${mc.map(c=>`<option value="${c.c}-${c.s}">${c.c}-${c.s}</option>`).join('')}</select></div>
+      <div class="form-group2"><label>Date</label><input type="date" value="2026-06-18"></div>
+    </div>
+  </div>
+  <div class="card" id="att-list">
+    <div class="card-header"><h3>Students – ${selClass.c}-${selClass.s}</h3><div><button class="btn btn-sm btn-success" onclick="markAllPresent()">✅ Mark All Present</button></div></div>
+    <table><thead><tr><th>#</th><th>Student Name</th><th>ID</th><th>Status</th></tr></thead>
+    <tbody>${students.map((st,i)=>`<tr><td>${i+1}</td><td>${st.n}</td><td><code>${st.id}</code></td><td>
+      <select class="att-sel" data-id="${st.id}" style="padding:4px 8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;background:#fff">
+        <option value="P">Present</option><option value="A">Absent</option><option value="L">Leave</option>
+      </select></td></tr>`).join('')}</tbody></table>
+    <div style="margin-top:16px;display:flex;gap:12px">
+      <button class="btn btn-primary" onclick="saveAttendance()">💾 Save Attendance</button>
+      <button class="btn btn-outline" onclick="toast('Attendance report generated.','success')">📊 View Report</button>
+    </div>
+  </div>`;
+}
+function markAllPresent() {
+  document.querySelectorAll('.att-sel').forEach(s=>s.value='P');
+  toast('All students marked Present.','success');
+}
+function saveAttendance() {
+  const data = {};
+  document.querySelectorAll('.att-sel').forEach(s=>{data[s.dataset.id]=s.value;});
+  toast(`Attendance saved for ${Object.keys(data).length} students.`,'success');
+}
+
+// ============================================================
+// TEACHER: UPLOAD HOMEWORK
+// ============================================================
+function renderTeacherHomework() {
+  const mc = myClasses();
+  const hw = filterForMe(DB.homeworks);
+  return `<div class="page-header"><h1>Homework Management</h1></div>
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header"><h3>Upload New Homework</h3></div>
+    <div class="form-row">
+      <div class="form-group2"><label>Class & Section</label><select>${mc.map(c=>`<option>${c.c}-${c.s}</option>`).join('')}</select></div>
+      <div class="form-group2"><label>Subject</label><select>${(currentUser.subjects||['Mathematics']).map(s=>`<option>${s}</option>`).join('')}</select></div>
+      <div class="form-group2" style="flex:2"><label>Title</label><input type="text" id="hw-title" placeholder="e.g. Chapter 4 – Exercise 4.3"></div>
+    </div>
+    <div class="form-group2"><label>Description / Instructions</label><textarea id="hw-desc" placeholder="Provide detailed instructions..."></textarea></div>
+    <div class="form-row">
+      <div class="form-group2"><label>Due Date</label><input type="date" id="hw-due"></div>
+    </div>
+    <div class="upload-zone" onclick="toast('Attachment upload simulated.','info')"><div class="uz-icon">📎</div><p>Attach reference material (optional)</p></div>
+    <button class="btn btn-primary" style="margin-top:12px" onclick="uploadHomework()">Upload Homework</button>
+  </div>
+  <div class="card">
+    <div class="card-header"><h3>My Uploaded Homework</h3></div>
+    <table><thead><tr><th>Class</th><th>Subject</th><th>Title</th><th>Due</th><th>Actions</th></tr></thead>
+    <tbody>${hw.map(h=>`<tr><td>${h.class}-${h.section}</td><td><span class="badge badge-blue">${h.subject}</span></td><td>${h.title}</td><td>${h.dueDate}</td><td><button class="btn btn-sm btn-danger" onclick="toast('Homework deleted.','danger')">Delete</button></td></tr>`).join('')}</tbody>
+    </table>
+  </div>`;
+}
+function uploadHomework() {
+  const title = document.getElementById('hw-title').value.trim();
+  if(!title){toast('Please enter a title.','danger');return;}
+  const mc = myClasses();
+  DB.homeworks.push({id:Date.now(),class:mc[0].c,section:mc[0].s,subject:(currentUser.subjects||[''])[0],title,desc:document.getElementById('hw-desc').value||'',dueDate:document.getElementById('hw-due').value||'TBD',uploadedBy:currentUser.name,attachments:[]});
+  toast('Homework uploaded successfully!','success');
+  showPage('t-homework');
+}
+
+// ============================================================
+// TEACHER: UPLOAD ASSIGNMENT
+// ============================================================
+function renderTeacherAssignment() {
+  const mc = myClasses();
+  const asgns = filterForMe(DB.assignments);
+  return `<div class="page-header"><h1>Assignment Management</h1></div>
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header"><h3>Create New Assignment</h3></div>
+    <div class="form-row">
+      <div class="form-group2"><label>Class & Section</label><select>${mc.map(c=>`<option>${c.c}-${c.s}</option>`).join('')}</select></div>
+      <div class="form-group2"><label>Subject</label><select>${(currentUser.subjects||['Mathematics']).map(s=>`<option>${s}</option>`).join('')}</select></div>
+      <div class="form-group2"><label>Max Marks</label><input type="number" placeholder="e.g. 20"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group2" style="flex:2"><label>Assignment Title</label><input type="text" placeholder="Assignment title..."></div>
+      <div class="form-group2"><label>Due Date</label><input type="date"></div>
+    </div>
+    <div class="form-group2"><label>Description</label><textarea placeholder="Describe the assignment..."></textarea></div>
+    <button class="btn btn-primary" style="margin-top:12px" onclick="toast('Assignment uploaded! Students have been notified.','success')">Upload Assignment</button>
+  </div>
+  <div class="card">
+    <div class="card-header"><h3>Active Assignments</h3></div>
+    <table><thead><tr><th>Class</th><th>Subject</th><th>Title</th><th>Max Marks</th><th>Due</th><th>Status</th></tr></thead>
+    <tbody>${asgns.map(a=>`<tr><td>${a.class}-${a.section}</td><td>${a.subject}</td><td>${a.title}</td><td>${a.maxMarks}</td><td>${a.dueDate}</td><td><span class="badge badge-green">${a.status}</span></td></tr>`).join('')}</tbody></table>
+  </div>`;
+}
+
+// ============================================================
+// TEACHER: COURSE MATERIAL
+// ============================================================
+function renderTeacherMaterial() {
+  const mc = myClasses();
+  const mats = filterForMe(DB.courseMaterial);
+  return `<div class="page-header"><h1>Course Material Management</h1></div>
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header"><h3>Upload New Material</h3></div>
+    <div class="form-row">
+      <div class="form-group2"><label>Class & Section</label><select>${mc.map(c=>`<option>${c.c}-${c.s}</option>`).join('')}</select></div>
+      <div class="form-group2"><label>Subject</label><select>${(currentUser.subjects||['Mathematics']).map(s=>`<option>${s}</option>`).join('')}</select></div>
+      <div class="form-group2" style="flex:2"><label>Title</label><input type="text" placeholder="Material title..."></div>
+    </div>
+    <div class="upload-zone" onclick="toast('File picker simulated.','info')"><div class="uz-icon">📁</div><p>Upload notes, PPT, PDF, or video links</p><span>PDF, PPTX, DOCX, MP4 · Max 50 MB</span></div>
+    <button class="btn btn-primary" style="margin-top:12px" onclick="toast('Course material uploaded! Students can now access it.','success')">Upload Material</button>
+  </div>
+  <div class="card">
+    <div class="card-header"><h3>Uploaded Materials</h3></div>
+    <table><thead><tr><th>Title</th><th>Class</th><th>Subject</th><th>Size</th><th>Date</th><th>Actions</th></tr></thead>
+    <tbody>${mats.map(m=>`<tr><td>${m.title}</td><td>${m.class}-${m.section}</td><td>${m.subject}</td><td>${m.size}</td><td>${m.date}</td><td><button class="btn btn-sm btn-danger" onclick="toast('Material deleted.','danger')">Delete</button></td></tr>`).join('')}</tbody>
+    </table>
+  </div>`;
+}
+
+// ============================================================
+// TEACHER: DOUBTS
+// ============================================================
+function renderTeacherDoubts() {
+  const myD = filterForMe(DB.doubts);
+  return `<div class="page-header"><h1>Student Doubts</h1></div>
+  ${myD.length===0?'<div class="empty-state"><div class="es-icon">✅</div><p>No pending doubts!</p></div>':
+  myD.map(d=>`<div class="card" style="margin-bottom:16px">
+    <div class="card-header"><h3>${d.question.substring(0,60)}...</h3><span class="badge ${d.status==='resolved'?'badge-green':'badge-orange'}">${d.status}</span></div>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:8px">👩‍🎓 ${d.askedBy} · Class ${d.class}-${d.section} · ${d.subject} · ${d.date}</p>
+    <p style="font-size:14px;font-style:italic">"${d.question}"</p>
+    ${d.reply?`<div class="alert alert-success" style="margin-top:8px">✅ Reply: ${d.reply}</div>`:`
+    <div style="margin-top:12px">
+      <div class="form-group2"><label>Your Reply</label><textarea placeholder="Type your answer..." id="reply-${d.id}"></textarea></div>
+      <button class="btn btn-primary" style="margin-top:8px" onclick="replyDoubt(${d.id})">Send Reply</button>
+    </div>`}
+  </div>`).join('')}`;
+}
+function replyDoubt(id) {
+  const replyEl = document.getElementById(`reply-${id}`);
+  if(!replyEl||!replyEl.value.trim()){toast('Please enter a reply.','danger');return;}
+  const doubt = DB.doubts.find(d=>d.id===id);
+  if(doubt){doubt.reply=replyEl.value.trim();doubt.repliedBy=currentUser.name;doubt.replyDate='2026-06-18';doubt.status='resolved';}
+  toast('Reply sent to student!','success');
+  showPage('t-doubts');
+}
+
+// ============================================================
+// TEACHER: STUDENT RECORDS
+// ============================================================
+function renderTeacherStudents() {
+  const mc = myClasses();
+  const students = mc.flatMap(c=>STUDENTS.filter(st=>st.c===c.c&&st.s===c.s));
+  return `<div class="page-header"><h1>Student Records</h1><p>Your class sections</p></div>
+  <div class="search-bar"><span>🔍</span><input type="text" placeholder="Search students..." oninput="filterStudentTable(this.value)"></div>
+  <div class="card scroll-table">
+    <table id="student-table"><thead><tr><th>#</th><th>Name</th><th>Class</th><th>Student ID</th><th>Username</th><th>Actions</th></tr></thead>
+    <tbody>${students.map((st,i)=>`<tr><td>${i+1}</td><td><strong>${st.n}</strong></td><td><span class="badge badge-blue">${st.c}-${st.s}</span></td><td><code>${st.id}</code></td><td>${st.u}</td><td><button class="btn btn-sm btn-outline" onclick="showStudentDetail('${st.id}','${st.n}','${st.c}','${st.s}')">View</button></td></tr>`).join('')}
+    </tbody></table>
+  </div>`;
+}
+function filterStudentTable(q) {
+  const rows = document.querySelectorAll('#student-table tbody tr');
+  rows.forEach(r=>{r.style.display=r.textContent.toLowerCase().includes(q.toLowerCase())?'':'none';});
+}
+function showStudentDetail(id, name, cls, sec) {
+  showModal(`Student: ${name}`,`<div class="detail-row"><span class="detail-label">Name</span><span class="detail-value">${name}</span></div><div class="detail-row"><span class="detail-label">ID</span><span class="detail-value"><code>${id}</code></span></div><div class="detail-row"><span class="detail-label">Class</span><span class="detail-value">${cls}-${sec}</span></div><div class="detail-row"><span class="detail-label">School</span><span class="detail-value">S.D. Public School Duplicate, Jagadhri</span></div><div class="detail-row"><span class="detail-label">Session</span><span class="detail-value">2026-27</span></div>`);
+}
+
+// ============================================================
+// TEACHER: UPLOAD NOTICE
+// ============================================================
+function renderTeacherNotice() {
+  return `<div class="page-header"><h1>Upload Notice</h1></div>
+  <div class="card">
+    <div class="card-header"><h3>Create Staff Notice</h3></div>
+    <div class="alert alert-info">ℹ️ Notices uploaded here will be visible to all teaching staff and administration.</div>
+    <div class="form-row">
+      <div class="form-group2" style="flex:3"><label>Notice Title</label><input type="text" id="nt-title" placeholder="Notice title..."></div>
+      <div class="form-group2"><label>Type</label><select id="nt-type"><option>general</option><option>staff</option><option>urgent</option></select></div>
+    </div>
+    <div class="form-group2"><label>Notice Body</label><textarea id="nt-body" placeholder="Write the notice content..." style="min-height:120px"></textarea></div>
+    <button class="btn btn-primary" style="margin-top:12px" onclick="uploadTeacherNotice()">Post Notice</button>
+  </div>`;
+}
+function uploadTeacherNotice() {
+  const title = document.getElementById('nt-title').value.trim();
+  const body = document.getElementById('nt-body').value.trim();
+  if(!title||!body){toast('Please fill all fields.','danger');return;}
+  DB.notices.unshift({id:Date.now(),title,body,type:document.getElementById('nt-type').value,author:currentUser.name,date:'2026-06-18',for:['teacher','admin']});
+  toast('Notice posted successfully!','success');
+  showPage('notices');
+}
+
+// ============================================================
+// TEACHER: SALARY
+// ============================================================
+function renderTeacherSalary() {
+  const sal = DB.salaryData[currentUser.id] || {basic:45000,hra:9000,da:5400,transport:1600,medical:500,pf:5400,tax:2500,misc:0,history:[]};
+  const gross = sal.basic+sal.hra+sal.da+sal.transport+sal.medical;
+  const deductions = sal.pf+sal.tax+sal.misc;
+  const net = gross-deductions;
+  return `<div class="page-header"><h1>Salary Status</h1></div>
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-header"><h3>Current Salary Breakdown</h3></div>
+    <div class="grid-2">
+      <div>
+        <p style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:12px">EARNINGS</p>
+        <div class="salary-row"><span>Basic Pay</span><span>₹${sal.basic.toLocaleString()}</span></div>
+        <div class="salary-row"><span>HRA (20%)</span><span>₹${sal.hra.toLocaleString()}</span></div>
+        <div class="salary-row"><span>DA (12%)</span><span>₹${sal.da.toLocaleString()}</span></div>
+        <div class="salary-row"><span>Transport Allowance</span><span>₹${sal.transport.toLocaleString()}</span></div>
+        <div class="salary-row"><span>Medical Allowance</span><span>₹${sal.medical.toLocaleString()}</span></div>
+        <div class="salary-row" style="border-top:2px solid var(--accent);padding-top:10px"><strong>Gross Salary</strong><strong style="color:var(--success)">₹${gross.toLocaleString()}</strong></div>
+      </div>
+      <div>
+        <p style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:12px">DEDUCTIONS</p>
+        <div class="salary-row"><span>Provident Fund (12%)</span><span style="color:var(--danger)">-₹${sal.pf.toLocaleString()}</span></div>
+        <div class="salary-row"><span>Income Tax</span><span style="color:var(--danger)">-₹${sal.tax.toLocaleString()}</span></div>
+        <div class="salary-row" style="border-top:2px solid var(--danger);padding-top:10px"><strong>Total Deductions</strong><strong style="color:var(--danger)">₹${deductions.toLocaleString()}</strong></div>
+        <div class="salary-row" style="background:var(--surface2);border-radius:var(--r);padding:12px;margin-top:16px;border:none"><strong style="font-size:16px">Net Pay</strong><strong style="color:var(--accent);font-size:18px">₹${net.toLocaleString()}</strong></div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><h3>Payment History</h3></div>
+    <table><thead><tr><th>Month</th><th>Gross</th><th>Deductions</th><th>Net</th><th>Status</th><th>Action</th></tr></thead>
+    <tbody>${sal.history.map(h=>`<tr><td>${h.month}</td><td>₹${h.gross.toLocaleString()}</td><td>₹${h.deductions.toLocaleString()}</td><td><strong>₹${h.net.toLocaleString()}</strong></td><td><span class="badge badge-green">${h.status}</span></td><td><button class="btn btn-sm btn-outline" onclick="toast('Payslip downloading...','success')">🧾 Payslip</button></td></tr>`).join('')}</tbody>
+    </table>
+  </div>`;
+}
+
+// ============================================================
+// TEACHER: RESIGNATION
+// ============================================================
+function renderTeacherResign() {
+  const myR = DB.resignations.filter(r=>r.teacherId===currentUser.id);
+  return `<div class="page-header"><h1>Resignation Portal</h1></div>
+  <div class="alert alert-warn">⚠️ Submitting a resignation is a formal action. Once submitted, it will be reviewed by the Principal/Administration. A standard notice period of 30 days applies.</div>
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header"><h3>Submit Resignation</h3></div>
+    <div class="form-row">
+      <div class="form-group2"><label>Notice Period</label><select><option>30 days</option><option>60 days</option><option>Immediate</option></select></div>
+      <div class="form-group2"><label>Last Working Day</label><input type="date"></div>
+    </div>
+    <div class="form-group2"><label>Reason for Resignation</label><textarea id="res-reason" placeholder="Please provide your reason for resignation..." style="min-height:120px"></textarea></div>
+    <button class="btn btn-danger" style="margin-top:12px" onclick="submitResignation()">Submit Resignation Letter</button>
+  </div>
+  <div class="card">
+    <div class="card-header"><h3>Resignation Status</h3></div>
+    ${myR.length===0?'<div class="empty-state"><p>No resignation submitted.</p></div>':
+    myR.map(r=>`<div class="notice-card"><div class="nc-header"><strong>Resignation Submitted</strong><span class="badge ${r.status==='approved'?'badge-green':r.status==='pending'?'badge-orange':'badge-red'}">${r.status}</span></div><div class="nc-meta">Submitted: ${r.date} · Notice Period: ${r.noticePeriod}</div><div class="nc-body">${r.reason}</div></div>`).join('')}
+  </div>`;
+}
+function submitResignation() {
+  const reason = document.getElementById('res-reason').value.trim();
+  if(!reason){toast('Please provide a reason.','danger');return;}
+  DB.resignations.push({id:Date.now(),name:currentUser.name,teacherId:currentUser.id,date:'2026-06-18',reason,status:'pending',noticePeriod:'30 days'});
+  toast('Resignation submitted. You will be contacted by administration.','success');
+  showPage('t-resign');
+}
+
+// ============================================================
+// ADMIN: STUDENT DIRECTORY
+// ============================================================
+function renderAdminStudents() {
+  const allStudents = STUDENTS;
+  return `<div class="page-header"><h1>Student Directory</h1><p>${allStudents.length} students loaded (sample from 3,454 total)</p></div>
+  <div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap">
+    <button class="btn btn-primary" onclick="showAddStudentModal()">+ Add Student</button>
+    <button class="btn btn-outline" onclick="toast('Student directory exporting to Excel...','success')">⬇ Export Excel</button>
+    <button class="btn btn-outline" onclick="toast('Student directory exporting to PDF...','success')">⬇ Export PDF</button>
+  </div>
+  <div class="filter-row">
+    <input type="text" placeholder="Search by name, ID, class..." oninput="filterTable(this.value,'stud-tbl')">
+    <select onchange="filterByClass(this.value)"><option value="">All Classes</option>${[...new Set(STUDENTS.map(s=>s.c))].sort().map(c=>`<option>${c}</option>`).join('')}</select>
+  </div>
+  <div class="card scroll-table">
+    <table id="stud-tbl"><thead><tr><th>#</th><th>Name</th><th>Class</th><th>Section</th><th>Student ID</th><th>Username</th><th>Actions</th></tr></thead>
+    <tbody>${allStudents.map((st,i)=>`<tr><td>${i+1}</td><td><strong>${st.n}</strong></td><td>${st.c}</td><td>${st.s}</td><td><code>${st.id}</code></td><td>${st.u}</td><td><button class="btn btn-sm btn-outline" onclick="showStudentDetail('${st.id}','${st.n}','${st.c}','${st.s}')">View</button> <button class="btn btn-sm btn-danger" onclick="removeStudent('${st.id}')">Remove</button></td></tr>`).join('')}
+    </tbody></table>
+  </div>`;
+}
+function filterTable(q, tableId) {
+  document.querySelectorAll(`#${tableId} tbody tr`).forEach(r=>{r.style.display=r.textContent.toLowerCase().includes(q.toLowerCase())?'':'none';});
+}
+function removeStudent(id) {
+  if(!confirm('Remove this student from the directory?')) return;
+  const idx = STUDENTS.findIndex(s=>s.id===id);
+  if(idx>-1) STUDENTS.splice(idx,1);
+  toast('Student removed from directory.','danger');
+  showPage('a-students');
+}
+function showAddStudentModal() {
+  showModal('Add New Student',`<div class="form-row"><div class="form-group2"><label>Full Name</label><input type="text" id="ns-name"></div><div class="form-group2"><label>Gender</label><select id="ns-gender"><option>Male</option><option>Female</option></select></div></div>
+  <div class="form-row"><div class="form-group2"><label>Class</label><select id="ns-class">${[...new Set(STUDENTS.map(s=>s.c))].sort().map(c=>`<option>${c}</option>`).join('')}</select></div><div class="form-group2"><label>Section</label><input type="text" id="ns-section" placeholder="e.g. A, B, Chubbies"></div></div>
+  <div class="form-row"><div class="form-group2"><label>Username</label><input type="text" id="ns-user" placeholder="e.g. john.smith99"></div><div class="form-group2"><label>Student ID</label><input type="text" id="ns-id" placeholder="e.g. SD014000"></div></div>
+  <button class="btn btn-primary" style="margin-top:12px;width:100%" onclick="addNewStudent()">Add Student</button>`);
+}
+function addNewStudent() {
+  const name=document.getElementById('ns-name').value.trim(),cls=document.getElementById('ns-class').value,sec=document.getElementById('ns-section').value.trim(),user=document.getElementById('ns-user').value.trim(),id=document.getElementById('ns-id').value.trim();
+  if(!name||!cls||!sec||!user||!id){toast('Please fill all fields.','danger');return;}
+  STUDENTS.push({id,u:user,n:name,c:cls,s:sec});
+  closeModal();toast('Student added successfully!','success');showPage('a-students');
+}
+
+// ============================================================
+// ADMIN: TEACHER DIRECTORY
+// ============================================================
+function renderAdminTeachers() {
+  return `<div class="page-header"><h1>Teacher Directory</h1><p>500 total teaching staff (sample shown)</p></div>
+  <div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap">
+    <button class="btn btn-primary" onclick="showAddTeacherModal()">+ Add Teacher</button>
+    <button class="btn btn-outline" onclick="toast('Teacher directory exporting...','success')">⬇ Export Excel</button>
+  </div>
+  <div class="filter-row"><input type="text" placeholder="Search teachers..." oninput="filterTable(this.value,'teach-tbl')"></div>
+  <div class="card scroll-table">
+    <table id="teach-tbl"><thead><tr><th>#</th><th>Name</th><th>ID</th><th>Designation</th><th>Subjects</th><th>Classes</th><th>Actions</th></tr></thead>
+    <tbody>${TEACHERS.map((t,i)=>`<tr><td>${i+1}</td><td><strong>${t.n}</strong></td><td><code>${t.id}</code></td><td><span class="badge badge-purple">${t.desig}</span></td><td>${t.subjects.join(', ')}</td><td>${(t.classes||[]).map(c=>`${c.c}-${c.s}`).join(', ')}</td><td><button class="btn btn-sm btn-outline">View</button> <button class="btn btn-sm btn-danger" onclick="toast('Teacher removed.','danger')">Remove</button></td></tr>`).join('')}
+    </tbody></table>
+  </div>`;
+}
+function showAddTeacherModal() {
+  showModal('Add New Teacher',`<div class="form-row"><div class="form-group2"><label>Full Name</label><input type="text" id="nt2-name"></div><div class="form-group2"><label>Designation</label><select id="nt2-desig"><option>PRT</option><option>TGT</option><option>PGT</option><option>NTT</option></select></div></div>
+  <div class="form-row"><div class="form-group2"><label>Teacher ID</label><input type="text" id="nt2-id" placeholder="e.g. SDPSD1501"></div><div class="form-group2"><label>Username</label><input type="text" id="nt2-user" placeholder="e.g. teacher.name"></div></div>
+  <div class="form-group2"><label>Subjects (comma separated)</label><input type="text" id="nt2-sub" placeholder="e.g. Mathematics, Science"></div>
+  <button class="btn btn-primary" style="margin-top:12px;width:100%" onclick="addNewTeacher()">Add Teacher</button>`);
+}
+function addNewTeacher() {
+  const name=document.getElementById('nt2-name').value.trim(),id=document.getElementById('nt2-id').value.trim(),user=document.getElementById('nt2-user').value.trim(),sub=document.getElementById('nt2-sub').value.trim().split(',').map(s=>s.trim()),desig=document.getElementById('nt2-desig').value;
+  if(!name||!id||!user){toast('Please fill required fields.','danger');return;}
+  TEACHERS.push({id,u:user,n:name,desig,subjects:sub,classes:[]});
+  closeModal();toast('Teacher added to directory!','success');showPage('a-teachers');
+}
+
+// ============================================================
+// ADMIN: TEACHER ATTENDANCE
+// ============================================================
+function renderAdminAttendance() {
+  return `<div class="page-header"><h1>Teacher Attendance</h1></div>
+  <div class="filter-row"><input type="date" value="2026-06-18"><select><option>All Wings</option><option>Pre-Primary</option><option>Primary</option><option>Secondary</option></select><button class="btn btn-outline" onclick="toast('Report exported.','success')">⬇ Export</button></div>
+  <div class="card scroll-table">
+    <table><thead><tr><th>#</th><th>Teacher Name</th><th>ID</th><th>Designation</th><th>Status</th><th>In Time</th><th>Out Time</th></tr></thead>
+    <tbody>${TEACHERS.map((t,i)=>{const st=['Present','Present','Present','Present','Absent','Present'][i%6];return`<tr><td>${i+1}</td><td>${t.n}</td><td><code>${t.id}</code></td><td>${t.desig}</td><td><span class="badge ${st==='Present'?'badge-green':'badge-red'}">${st}</span></td><td>${st==='Present'?'8:15 AM':'—'}</td><td>${st==='Present'?'4:30 PM':'—'}</td></tr>`}).join('')}
+    </tbody></table>
+  </div>`;
+}
+
+// ============================================================
+// ADMIN: EXAM SEATING
+// ============================================================
+function renderAdminExam() {
+  return `<div class="page-header"><h1>Examination Seating Plans</h1></div>
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header"><h3>Upload New Seating Plan</h3></div>
+    <div class="form-row">
+      <div class="form-group2"><label>Exam Name</label><input type="text" placeholder="e.g. Annual Exam 2026"></div>
+      <div class="form-group2"><label>Class</label><select><option>IX</option><option>X</option><option>XI</option><option>XII</option></select></div>
+      <div class="form-group2"><label>Section</label><input type="text" placeholder="e.g. A, B"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group2"><label>Subject</label><input type="text" placeholder="Subject name"></div>
+      <div class="form-group2"><label>Date</label><input type="date"></div>
+      <div class="form-group2"><label>Exam Hall</label><input type="text" placeholder="e.g. Hall A"></div>
+    </div>
+    <div class="upload-zone" onclick="toast('File upload simulated.','info')"><div class="uz-icon">📄</div><p>Upload seating plan PDF or Excel</p></div>
+    <button class="btn btn-primary" style="margin-top:12px" onclick="toast('Seating plan uploaded! Students can now view it.','success')">Upload & Publish</button>
+  </div>
+  <div class="card">
+    <div class="card-header"><h3>Existing Seating Plans</h3></div>
+    <table><thead><tr><th>Exam</th><th>Class</th><th>Subject</th><th>Date</th><th>Hall</th><th>Actions</th></tr></thead>
+    <tbody>${DB.examSitting.map(e=>`<tr><td>${e.exam}</td><td>${e.class}-${e.section}</td><td>${e.subject}</td><td>${e.date}</td><td>${e.hall}</td><td><button class="btn btn-sm btn-outline" onclick="toast('Seating plan downloaded.')">⬇ Download</button></td></tr>`).join('')}</tbody>
+    </table>
+  </div>`;
+}
+
+// ============================================================
+// ADMIN: ADMIT CARDS
+// ============================================================
+function renderAdminAdmitCards() {
+  return `<div class="page-header"><h1>Admit Card Management</h1></div>
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header"><h3>Generate & Upload Admit Cards</h3></div>
+    <div class="form-row">
+      <div class="form-group2"><label>Exam</label><input type="text" placeholder="e.g. Annual Exam 2026"></div>
+      <div class="form-group2"><label>Class</label><select><option>All Classes</option><option>IX</option><option>X</option><option>XI</option><option>XII</option></select></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group2" style="flex:2"><label>Additional Instructions</label><textarea placeholder="Instructions to be printed on admit card..."></textarea></div>
+    </div>
+    <button class="btn btn-primary" onclick="toast('Admit cards generated for all selected students!','success')">Generate Admit Cards</button>
+    <button class="btn btn-outline" style="margin-left:12px" onclick="toast('Bulk PDF downloaded.','success')">⬇ Download All PDFs</button>
+  </div>
+  <div class="alert alert-success">✅ Admit cards are currently active and accessible to students via their portals.</div>`;
+}
+
+// ============================================================
+// ADMIN: NOTICES
+// ============================================================
+function renderAdminNotice() {
+  return `<div class="page-header"><h1>Upload Notice</h1></div>
+  <div class="card">
+    <div class="card-header"><h3>Create New Notice</h3></div>
+    <div class="form-row">
+      <div class="form-group2" style="flex:3"><label>Title</label><input type="text" id="an-title" placeholder="Notice title..."></div>
+      <div class="form-group2"><label>Type</label><select id="an-type"><option>general</option><option>urgent</option><option>staff</option></select></div>
+    </div>
+    <div class="form-group2"><label>Notice Body</label><textarea id="an-body" placeholder="Write the notice..." style="min-height:120px"></textarea></div>
+    <div class="form-row">
+      <div class="form-group2"><label>Visible To</label>
+        <div style="display:flex;gap:12px;margin-top:4px">
+          <label style="display:flex;align-items:center;gap:4px;font-size:13px"><input type="checkbox" id="fn-student" checked> Students</label>
+          <label style="display:flex;align-items:center;gap:4px;font-size:13px"><input type="checkbox" id="fn-teacher" checked> Teachers</label>
+          <label style="display:flex;align-items:center;gap:4px;font-size:13px"><input type="checkbox" id="fn-admin" checked> Admin</label>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-primary" style="margin-top:12px" onclick="uploadAdminNotice()">Post Notice</button>
+  </div>`;
+}
+function uploadAdminNotice() {
+  const title=document.getElementById('an-title').value.trim(),body=document.getElementById('an-body').value.trim();
+  if(!title||!body){toast('Please fill all fields.','danger');return;}
+  const forArr=[];
+  if(document.getElementById('fn-student').checked)forArr.push('student');
+  if(document.getElementById('fn-teacher').checked)forArr.push('teacher');
+  if(document.getElementById('fn-admin').checked)forArr.push('admin');
+  DB.notices.unshift({id:Date.now(),title,body,type:document.getElementById('an-type').value,author:currentUser.name,date:'2026-06-18',for:forArr});
+  toast('Notice posted! Visible to selected roles.','success');
+  showPage('notices');
+}
+
+// ============================================================
+// ADMIN: CIRCULAR
+// ============================================================
+function renderAdminCircular() {
+  return `<div class="page-header"><h1>Upload Circular</h1></div>
+  <div class="card">
+    <div class="card-header"><h3>Create New Circular</h3></div>
+    <div class="form-row">
+      <div class="form-group2"><label>Circular No.</label><input type="text" placeholder="e.g. 15"></div>
+      <div class="form-group2" style="flex:2"><label>Subject</label><input type="text" id="ac-title" placeholder="Circular subject..."></div>
+    </div>
+    <div class="form-group2"><label>Content</label><textarea id="ac-body" placeholder="Write circular content..." style="min-height:140px"></textarea></div>
+    <div class="upload-zone" onclick="toast('PDF upload simulated.','info')"><div class="uz-icon">📋</div><p>Attach circular PDF (optional)</p></div>
+    <button class="btn btn-primary" style="margin-top:12px" onclick="uploadCircular()">Publish Circular</button>
+  </div>`;
+}
+function uploadCircular() {
+  const title=document.getElementById('ac-title').value.trim(),body=document.getElementById('ac-body').value.trim();
+  if(!title||!body){toast('Please fill all fields.','danger');return;}
+  DB.circulars.unshift({id:Date.now(),title:`Circular – ${title}`,body,author:currentUser.name,date:'2026-06-18',for:['student','teacher','admin']});
+  toast('Circular published!','success');
+  showPage('notices');
+}
+
+// ============================================================
+// ADMIN: URGENT ANNOUNCEMENT
+// ============================================================
+function renderAdminAnnounce() {
+  return `<div class="page-header"><h1>Urgent Announcement</h1></div>
+  <div class="alert alert-warn">⚠️ Urgent announcements appear prominently as a banner on every user's dashboard.</div>
+  <div class="card">
+    <div class="card-header"><h3>Post Urgent Announcement</h3></div>
+    <div class="form-group2"><label>Announcement Text</label><textarea id="ua-text" placeholder="Type your urgent announcement..." style="min-height:100px"></textarea></div>
+    <button class="btn btn-danger" style="margin-top:12px" onclick="postUrgent()">⚡ Post Urgent Announcement</button>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <div class="card-header"><h3>Active Announcements</h3></div>
+    ${DB.urgentAnnouncements.map(u=>`<div class="urgent-banner"><span class="ub-icon">⚡</span><div class="ub-text"><strong>${u.text}</strong></div><button class="btn btn-sm btn-outline" style="margin-left:auto;background:transparent;color:#fff;border-color:rgba(255,255,255,.4)" onclick="removeUrgent(${u.id})">Remove</button></div>`).join('')||'<div class="empty-state"><p>No active urgent announcements.</p></div>'}
+  </div>`;
+}
+function postUrgent() {
+  const text=document.getElementById('ua-text').value.trim();
+  if(!text){toast('Please enter announcement text.','danger');return;}
+  DB.urgentAnnouncements.push({id:Date.now(),text,date:'2026-06-18'});
+  document.getElementById('notif-dot').style.display='block';
+  toast('Urgent announcement posted! Visible to all users.','success');
+  showPage('a-announce');
+}
+function removeUrgent(id) {
+  const idx=DB.urgentAnnouncements.findIndex(u=>u.id===id);
+  if(idx>-1)DB.urgentAnnouncements.splice(idx,1);
+  toast('Announcement removed.','success');
+  showPage('a-announce');
+}
+
+// ============================================================
+// ADMIN: SALARY
+// ============================================================
+function renderAdminSalary() {
+  return `<div class="page-header"><h1>Salary Management</h1></div>
+  <div class="filter-row">
+    <select><option>June 2026</option><option>May 2026</option><option>April 2026</option></select>
+    <select><option>All Designations</option><option>PRT</option><option>TGT</option><option>PGT</option></select>
+  </div>
+  <div class="card scroll-table">
+    <table><thead><tr><th>#</th><th>Name</th><th>ID</th><th>Designation</th><th>Gross</th><th>Deductions</th><th>Net</th><th>Status</th><th>Action</th></tr></thead>
+    <tbody>${TEACHERS.map((t,i)=>{const paid=i%5!==0;return`<tr><td>${i+1}</td><td>${t.n}</td><td><code>${t.id}</code></td><td>${t.desig}</td><td>₹${(45000+i*500).toLocaleString()}</td><td>₹7,900</td><td>₹${(37100+i*500).toLocaleString()}</td><td><span class="badge ${paid?'badge-green':'badge-orange'}">${paid?'paid':'pending'}</span></td><td>${!paid?`<button class="btn btn-sm btn-success" onclick="paySalary(this,'${t.n}')">Pay Now</button>`:`<button class="btn btn-sm btn-outline">Payslip</button>`}</td></tr>`}).join('')}
+    </tbody></table>
+  </div>`;
+}
+function paySalary(btn, name) {
+  const row = btn.closest('tr');
+  row.cells[7].innerHTML='<span class="badge badge-green">paid</span>';
+  row.cells[8].innerHTML='<button class="btn btn-sm btn-outline" onclick="toast(\'Payslip downloading.\')">Payslip</button>';
+  toast(`Salary paid to ${name}!`,'success');
+}
+
+// ============================================================
+// ADMIN: GRIEVANCES
+// ============================================================
+function renderAdminGrievances() {
+  return `<div class="page-header"><h1>Grievance Management</h1></div>
+  ${DB.grievances.length===0?'<div class="empty-state"><div class="es-icon">✅</div><p>No pending grievances.</p></div>':
+  DB.grievances.map(g=>`<div class="card" style="margin-bottom:16px">
+    <div class="card-header"><h3>${g.title}</h3><span class="badge badge-orange">${g.status}</span></div>
+    <div class="nc-meta">👤 ${g.submittedBy} (${g.submittedById}) · ${g.type} · ${g.date}</div>
+    <p style="font-size:13px;margin:8px 0">${g.desc}</p>
+    <div class="form-group2"><label>Response</label><textarea id="gr-${g.id}" placeholder="Write your response...">${g.response}</textarea></div>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button class="btn btn-success" onclick="respondGrievance(${g.id},'resolved')">✅ Resolve</button>
+      <button class="btn btn-danger" onclick="respondGrievance(${g.id},'rejected')">❌ Reject</button>
+    </div>
+  </div>`).join('')}`;
+}
+function respondGrievance(id, status) {
+  const g=DB.grievances.find(x=>x.id===id);
+  if(g){g.status=status;g.response=document.getElementById(`gr-${id}`).value||'Response sent.';}
+  toast(`Grievance ${status}!`,status==='resolved'?'success':'danger');
+  showPage('a-grievances');
+}
+
+// ============================================================
+// ADMIN: TRANSPORT
+// ============================================================
+function renderAdminTransport() {
+  return `<div class="page-header"><h1>Transport Requests</h1></div>
+  <div class="card scroll-table">
+    <table><thead><tr><th>#</th><th>Name</th><th>ID</th><th>Role</th><th>Route</th><th>Stop</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
+    <tbody>${DB.transportRequests.map((r,i)=>`<tr><td>${i+1}</td><td>${r.name}</td><td><code>${r.id_}</code></td><td><span class="badge badge-blue">${r.role}</span></td><td>${r.route}</td><td>${r.stop}</td><td>${r.date}</td><td><span class="badge ${r.status==='approved'?'badge-green':r.status==='pending'?'badge-orange':'badge-red'}">${r.status}</span></td><td><button class="btn btn-sm btn-success" onclick="updateTransport(${r.id},'approved')">✅ Approve</button> <button class="btn btn-sm btn-danger" onclick="updateTransport(${r.id},'rejected')">❌ Reject</button></td></tr>`).join('')}
+    </tbody></table>
+  </div>`;
+}
+function updateTransport(id, status) {
+  const r=DB.transportRequests.find(x=>x.id===id);
+  if(r)r.status=status;
+  toast(`Transport request ${status}!`,status==='approved'?'success':'danger');
+  showPage('a-transport');
+}
+
+// ============================================================
+// ADMIN: RESIGNATIONS
+// ============================================================
+function renderAdminResign() {
+  return `<div class="page-header"><h1>Resignation Requests</h1></div>
+  ${DB.resignations.length===0?'<div class="empty-state"><p>No pending resignations.</p></div>':
+  DB.resignations.map(r=>`<div class="card" style="margin-bottom:16px">
+    <div class="card-header"><h3>${r.name}</h3><span class="badge badge-orange">${r.status}</span></div>
+    <div class="nc-meta">🆔 ${r.teacherId} · Submitted: ${r.date} · Notice Period: ${r.noticePeriod}</div>
+    <p style="margin:10px 0;font-size:13px">${r.reason}</p>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-success" onclick="respondResign(${r.id},'accepted')">✅ Accept</button>
+      <button class="btn btn-danger" onclick="respondResign(${r.id},'declined')">❌ Decline</button>
+    </div>
+  </div>`).join('')}`;
+}
+function respondResign(id, status) {
+  const r=DB.resignations.find(x=>x.id===id);
+  if(r)r.status=status;
+  toast(`Resignation ${status}.`,status==='accepted'?'success':'danger');
+  showPage('a-resign');
+}
+
+// ============================================================
+// ADMIN: DOCUMENTS
+// ============================================================
+let schoolDocs = [
+  {id:1,name:'CBSE Affiliation Certificate 2025',type:'pdf',date:'2025-01-10',size:'1.2 MB'},
+  {id:2,name:'ISO 9001:2015 Certificate',type:'pdf',date:'2024-08-15',size:'0.8 MB'},
+  {id:3,name:'Fire Safety Compliance Report',type:'pdf',date:'2026-01-20',size:'2.1 MB'},
+  {id:4,name:'Annual Academic Calendar 2026-27',type:'pdf',date:'2026-03-01',size:'0.5 MB'},
+];
+function renderAdminDocs() {
+  return `<div class="page-header"><h1>School Documents</h1></div>
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header"><h3>Upload New Document</h3></div>
+    <div class="form-row">
+      <div class="form-group2" style="flex:2"><label>Document Name</label><input type="text" id="doc-name" placeholder="Document title..."></div>
+      <div class="form-group2"><label>Category</label><select><option>Certificate</option><option>Report</option><option>Policy</option><option>Minutes</option><option>Other</option></select></div>
+    </div>
+    <div class="upload-zone" onclick="toast('File upload simulated.','info')"><div class="uz-icon">📁</div><p>Upload document file</p><span>PDF, DOCX, XLSX · Max 25 MB</span></div>
+    <button class="btn btn-primary" style="margin-top:12px" onclick="uploadDoc()">Upload Document</button>
+  </div>
+  <div class="card scroll-table">
+    <div class="card-header"><h3>All Documents</h3><button class="btn btn-sm btn-outline" onclick="toast('All documents zipped and downloading...','success')">⬇ Download All</button></div>
+    <table><thead><tr><th>#</th><th>Document Name</th><th>Type</th><th>Date</th><th>Size</th><th>Actions</th></tr></thead>
+    <tbody id="doc-tbl">${schoolDocs.map((d,i)=>`<tr><td>${i+1}</td><td><strong>${d.name}</strong></td><td><span class="badge badge-blue">${d.type.toUpperCase()}</span></td><td>${d.date}</td><td>${d.size}</td><td><button class="btn btn-sm btn-outline" onclick="toast('Downloading ${d.name}...')">⬇ Download</button> <button class="btn btn-sm btn-danger" onclick="toast('Document deleted.','danger')">Delete</button></td></tr>`).join('')}
+    </tbody></table>
+  </div>`;
+}
+function uploadDoc() {
+  const name=document.getElementById('doc-name').value.trim();
+  if(!name){toast('Please enter document name.','danger');return;}
+  schoolDocs.push({id:Date.now(),name,type:'pdf',date:'2026-06-18',size:'— MB'});
+  toast('Document uploaded!','success');
+  showPage('a-docs');
+}
+
+// ============================================================
+// ADMIN: GENERATE LETTERS
+// ============================================================
+function renderAdminLetters() {
+  return `<div class="page-header"><h1>Generate Letters on Letterhead</h1></div>
+  <div class="grid-2">
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-header"><h3>Letter Details</h3></div>
+      <div class="form-group2"><label>Date</label><input type="date" id="lt-date" value="2026-06-18"></div>
+      <div class="form-group2" style="margin-top:12px"><label>To (Addressee)</label><input type="text" id="lt-to" placeholder="Name and address of recipient"></div>
+      <div class="form-group2" style="margin-top:12px"><label>Subject</label><input type="text" id="lt-sub" placeholder="Letter subject..."></div>
+      <div class="form-group2" style="margin-top:12px"><label>Body</label><textarea id="lt-body" placeholder="Write letter content here..." style="min-height:180px"></textarea></div>
+      <div class="form-group2" style="margin-top:12px"><label>Signatory</label><input type="text" id="lt-sign" value="${currentUser.name}" placeholder="Name of signatory"></div>
+      <div style="display:flex;gap:10px;margin-top:16px">
+        <button class="btn btn-primary" onclick="previewLetter()">👁 Preview</button>
+        <button class="btn btn-outline" onclick="toast('Letter printing...','success')">🖨️ Print</button>
+        <button class="btn btn-outline" onclick="toast('Letter downloading as PDF...','success')">⬇ PDF</button>
+      </div>
+    </div>
+    <div id="letter-preview-area">
+      <div class="letter-preview">
+        <div class="lp-header">
+          <div style="display:flex;align-items:center;gap:16px;justify-content:center;flex-wrap:wrap">
+            <div style="width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#6B3FA0,#4A90D9);display:flex;align-items:center;justify-content:center"><span style="color:#fff;font-size:20px;font-weight:900">SD</span></div>
+            <div style="text-align:center">
+              <h2 style="font-size:18px;font-weight:800;color:#6B3FA0">S.D. Public School Duplicate, Jagadhri (10+2)</h2>
+              <p style="font-size:11px;color:#5a5f7a">Affiliated to CBSE · Managed by S.D. Sabha · Established under S.D. Institutions, India</p>
+              <p style="font-size:11px;color:#5a5f7a">Sanatan Dharam Chowk, Motti Line, Jagadhri | sdpsdjyahoo.com | 50377-50377</p>
+            </div>
+          </div>
+        </div>
+        <div class="lp-date">Date: 18/06/2026</div>
+        <div class="lp-body" id="lp-content">
+          <p>To,<br>The Concerned Party</p>
+          <p style="margin:16px 0"><strong>Sub:</strong> Sample Letter</p>
+          <p>Respected Sir/Madam,</p>
+          <p style="margin-top:12px">This is a sample letter generated from the SDPSDJ ERP Portal. Please fill in the details on the left and click Preview to see your letter.</p>
+          <p style="margin-top:16px">Yours sincerely,</p>
+          <div style="margin-top:40px;border-top:1px solid #ccc;padding-top:8px">
+            <strong>${currentUser.name}</strong><br>
+            <span style="font-size:12px;color:#5a5f7a">${currentUser.desig} · S.D. Public School Duplicate, Jagadhri</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+function previewLetter() {
+  const to=document.getElementById('lt-to').value||'The Concerned Party';
+  const sub=document.getElementById('lt-sub').value||'(No Subject)';
+  const body=document.getElementById('lt-body').value||'(No body text)';
+  const sign=document.getElementById('lt-sign').value||currentUser.name;
+  const date=document.getElementById('lt-date').value||'2026-06-18';
+  const [y,m,d]=date.split('-');
+  const months=['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const fmtDate=`${d}/${months[parseInt(m)]}/${y}`;
+  document.getElementById('lp-content').innerHTML=`<p>To,<br>${to}</p><p style="margin:16px 0"><strong>Sub:</strong> ${sub}</p><p>Respected Sir/Madam,</p><p style="margin-top:12px">${body.replace(/\n/g,'<br>')}</p><p style="margin-top:16px">Yours sincerely,</p><div style="margin-top:40px;border-top:1px solid #ccc;padding-top:8px"><strong>${sign}</strong><br><span style="font-size:12px;color:#5a5f7a">${currentUser.desig} · S.D. Public School Duplicate, Jagadhri</span></div>`;
+  document.querySelector('.lp-date').textContent=`Date: ${fmtDate}`;
+  toast('Letter preview updated!','success');
+}
+
+// ============================================================
+// RESPONSIVE
+// ============================================================
+window.addEventListener('resize',()=>{
+  const menuBtn=document.getElementById('menu-toggle');
+  if(menuBtn) menuBtn.style.display=window.innerWidth<=900?'block':'none';
+});
+window.dispatchEvent(new Event('resize'));
+</script>
+</body>
+</html>
