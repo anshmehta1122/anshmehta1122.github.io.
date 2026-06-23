@@ -215,6 +215,11 @@ tr:hover td{background:var(--surface2)}
 @media(max-width:900px){
   .sidebar{transform:translateX(-100%)}
   .sidebar.open{transform:translateX(0)}
+
+  #menu-toggle{
+      display:block !important;
+  }
+
   .main-content{margin-left:0}
   .topbar{left:0}
   .grid-4{grid-template-columns:repeat(2,1fr)}
@@ -274,6 +279,7 @@ tr:hover td{background:var(--surface2)}
 <div id="app">
   <!-- Sidebar -->
   <nav class="sidebar" id="sidebar">
+    
     <div class="sidebar-header">
       <div class="sidebar-logo">
         <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#6B3FA0,#4A90D9);display:flex;align-items:center;justify-content:center;flex-shrink:0"><span style="color:#fff;font-size:14px;font-weight:900">SD</span></div>
@@ -622,7 +628,10 @@ function showPage(pageId) {
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   const nav = document.getElementById(`nav-${pageId}`);
   if(nav) nav.classList.add('active');
-
+  // Auto close sidebar on mobile after selecting menu
+if (window.innerWidth <= 900) {
+    document.getElementById('sidebar').classList.remove('open');
+}
   const titles = {
     dashboard:'Dashboard',profile:'My Profile',attendance:'Attendance',homework:'Homework',
     assignments:'Assignments',coursematerial:'Course Material',doubts:'Ask Doubts',
